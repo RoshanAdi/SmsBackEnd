@@ -9,14 +9,14 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int TeacherId;
-    private String TeacherFirstName;
-    private String TeacherLastName;
-    private String TeacherFullName;
-    private String TeacherEmail;
-    private String TeacherTp;
-    private String TeacherAddress;
+    private String FirstName;
+    private String LastName;
+    private String name;
+    private String Email;
+    private String Tp;
+    private String Address;
 
-    @ManyToMany  (mappedBy = "TeacherListForSubject")
+    @ManyToMany(mappedBy = "TeacherListForSubject")
     private List<Subject> subjectListForTeacher = new ArrayList<>();
 
     public List<Subject> getSubjectListForTeacher() {
@@ -35,51 +35,65 @@ public class Teacher {
         TeacherId = teacherId;
     }
 
-    public String getTeacherFirstName() {
-        return TeacherFirstName;
+    public String getFirstName() {
+        return FirstName;
     }
 
-    public void setTeacherFirstName(String teacherFirstName) {
-        TeacherFirstName = teacherFirstName;
+    public void setFirstName(String firstName) {
+        FirstName = firstName;
     }
 
-    public String getTeacherLastName() {
-        return TeacherLastName;
+    public String getLastName() {
+        return LastName;
     }
 
-    public void setTeacherLastName(String teacherLastName) {
-        TeacherLastName = teacherLastName;
+    public void setLastName(String lastName) {
+        LastName = lastName;
     }
 
-    public String getTeacherFullName() {
-        return TeacherFullName;
+    public String getName() {
+        return name;
     }
 
-    public void setTeacherFullName(String teacherFullName) {
-        TeacherFullName = teacherFullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTeacherEmail() {
-        return TeacherEmail;
+    public String getEmail() {
+        return Email;
     }
 
-    public void setTeacherEmail(String teacherEmail) {
-        TeacherEmail = teacherEmail;
+    public void setEmail(String email) {
+        Email = email;
     }
 
-    public String getTeacherTp() {
-        return TeacherTp;
+    public String getTp() {
+        return Tp;
     }
 
-    public void setTeacherTp(String teacherTp) {
-        TeacherTp = teacherTp;
+    public void setTp(String tp) {
+        Tp = tp;
     }
 
-    public String getTeacherAddress() {
-        return TeacherAddress;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setTeacherAddress(String teacherAddress) {
-        TeacherAddress = teacherAddress;
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "TeacherId=" + TeacherId +
+                ", FirstName='" + FirstName + '\'' +
+                ", LastName='" + LastName + '\'' +
+                ", name='" + name + '\'' +
+                ", Email='" + Email + '\'' +
+                ", Tp='" + Tp + '\'' +
+                ", Address='" + Address + '\'' +
+                ", subjectListForTeacher=" + subjectListForTeacher +
+                '}';
     }
 }

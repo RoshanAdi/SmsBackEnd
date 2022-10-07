@@ -1,12 +1,10 @@
 package com.se.smsbackend.Controller;
-
 import com.se.smsbackend.Entity.Student;
 import com.se.smsbackend.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
