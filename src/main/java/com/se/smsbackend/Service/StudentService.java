@@ -23,6 +23,8 @@ public class StudentService {
         return studentRepo.findById(id).get();
     }
 
+    public List<Student> getByNameContaining(String name) {return studentRepo.findByNameContaining(name);}
+
     public void deleteStudent(Integer id) {
         studentRepo.deleteById(id);
     }

@@ -16,14 +16,14 @@ public class Student {
 
 
 
-    private String StudentFirstName;
-    private String StudentLastName;
-    private String StudentFullName;
-    private String StudentDOB;
-    private String StudentAge;
-    private String StudentEmail;
-    private String StudentTp;
-    private String StudentAddress;
+    private String FirstName;
+    private String LastName;
+    private String name;  //full name
+    private String DOB;
+    private String Age;
+    private String Email;
+    private String Tp;
+    private String Address;
 
 
     public List<Attendance> getAttendanceList() {
@@ -50,70 +50,68 @@ public class Student {
         StudentId = studentId;
     }
 
-
-
-    public String getStudentFirstName() {
-        return StudentFirstName;
+    public String getFirstName() {
+        return FirstName;
     }
 
-    public void setStudentFirstName(String studentFirstName) {
-        StudentFirstName = studentFirstName;
+    public void setFirstName(String firstName) {
+        FirstName = firstName;
     }
 
-    public String getStudentLastName() {
-        return StudentLastName;
+    public String getLastName() {
+        return LastName;
     }
 
-    public void setStudentLastName(String studentLastName) {
-        StudentLastName = studentLastName;
+    public void setLastName(String lastName) {
+        LastName = lastName;
     }
 
-    public String getStudentFullName() {
-        return StudentFullName;
+    public String getName() {
+        return name;
     }
 
-    public void setStudentFullName(String studentFullName) {
-        StudentFullName = studentFullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getStudentDOB() {
-        return StudentDOB;
+    public String getDOB() {
+        return DOB;
     }
 
-    public void setStudentDOB(String studentDOB) {
-        StudentDOB = studentDOB;
+    public void setDOB(String DOB) {
+        this.DOB = DOB;
     }
 
-    public String getStudentAge() {
-        return StudentAge;
+    public String getAge() {
+        return Age;
     }
 
-    public void setStudentAge(String studentAge) {
-        StudentAge = studentAge;
+    public void setAge(String age) {
+        Age = age;
     }
 
-    public String getStudentEmail() {
-        return StudentEmail;
+    public String getEmail() {
+        return Email;
     }
 
-    public void setStudentEmail(String studentEmail) {
-        StudentEmail = studentEmail;
+    public void setEmail(String email) {
+        Email = email;
     }
 
-    public String getStudentTp() {
-        return StudentTp;
+    public String getTp() {
+        return Tp;
     }
 
-    public void setStudentTp(String studentTp) {
-        StudentTp = studentTp;
+    public void setTp(String tp) {
+        Tp = tp;
     }
 
-    public String getStudentAddress() {
-        return StudentAddress;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setStudentAddress(String studentAddress) {
-        StudentAddress = studentAddress;
+    public void setAddress(String address) {
+        Address = address;
     }
 
     @Override
@@ -121,14 +119,15 @@ public class Student {
         return "Student{" +
                 "StudentId=" + StudentId +
                 ", subjectList=" + subjectList +
-                ", StudentFirstName='" + StudentFirstName + '\'' +
-                ", StudentLastName='" + StudentLastName + '\'' +
-                ", StudentFullName='" + StudentFullName + '\'' +
-                ", StudentDOB='" + StudentDOB + '\'' +
-                ", StudentAge='" + StudentAge + '\'' +
-                ", StudentEmail='" + StudentEmail + '\'' +
-                ", StudentTp='" + StudentTp + '\'' +
-                ", StudentAddress='" + StudentAddress + '\'' +
+                ", AttendanceList=" + AttendanceList +
+                ", FirstName='" + FirstName + '\'' +
+                ", LastName='" + LastName + '\'' +
+                ", name='" + name + '\'' +
+                ", DOB='" + DOB + '\'' +
+                ", Age='" + Age + '\'' +
+                ", Email='" + Email + '\'' +
+                ", Tp='" + Tp + '\'' +
+                ", Address='" + Address + '\'' +
                 '}';
     }
 }
