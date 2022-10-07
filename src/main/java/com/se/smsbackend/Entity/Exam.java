@@ -1,4 +1,4 @@
-package Entity;
+package com.se.smsbackend.Entity;
 
 import javax.persistence.OneToOne;
 
