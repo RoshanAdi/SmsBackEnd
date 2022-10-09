@@ -19,11 +19,12 @@ public class Student {
     private String FirstName;
     private String LastName;
     private String name;  //full name
-    private String DOB;
+    private String birthDate;
     private String Age;
     private String Email;
     private String Tp;
     private String Address;
+    private String StudentPassword;
 
 
     public List<Attendance> getAttendanceList() {
@@ -66,6 +67,14 @@ public class Student {
         LastName = lastName;
     }
 
+    public String getStudentPassword() {
+        return StudentPassword;
+    }
+
+    public void setStudentPassword(String studentPassword) {
+        StudentPassword = studentPassword;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,12 +83,12 @@ public class Student {
         this.name = name;
     }
 
-    public String getDOB() {
-        return DOB;
+    public String getbirthDate() {
+        return birthDate;
     }
 
-    public void setDOB(String DOB) {
-        this.DOB = DOB;
+    public void setbirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getAge() {
@@ -123,11 +132,13 @@ public class Student {
                 ", FirstName='" + FirstName + '\'' +
                 ", LastName='" + LastName + '\'' +
                 ", name='" + name + '\'' +
-                ", DOB='" + DOB + '\'' +
+                ", birthDate='" + birthDate + '\'' +
                 ", Age='" + Age + '\'' +
                 ", Email='" + Email + '\'' +
                 ", Tp='" + Tp + '\'' +
                 ", Address='" + Address + '\'' +
+                ", StudentPassword='" + StudentPassword + '\'' +
                 '}';
     }
 }
+

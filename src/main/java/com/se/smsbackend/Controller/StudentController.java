@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 public class StudentController {
     @Autowired
     StudentService studentService;
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/student")
 
     public Student postMap(@RequestBody Student student){
