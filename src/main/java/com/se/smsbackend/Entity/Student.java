@@ -26,7 +26,10 @@ public class Student {
     private String Address;
     private String StudentPassword;
 
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
 
+    private boolean enabled;
     public List<Attendance> getAttendanceList() {
         return AttendanceList;
     }
@@ -83,11 +86,11 @@ public class Student {
         this.name = name;
     }
 
-    public String getbirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setbirthDate(String birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -139,6 +142,22 @@ public class Student {
                 ", Address='" + Address + '\'' +
                 ", StudentPassword='" + StudentPassword + '\'' +
                 '}';
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
 

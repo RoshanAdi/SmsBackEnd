@@ -2,25 +2,33 @@ package com.se.smsbackend.Controller;
 import com.se.smsbackend.Entity.Student;
 import com.se.smsbackend.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.se.smsbackend.Site.Utility.getSiteURL;
 
 @RestController
 @RequestMapping("/")
 public class StudentController {
     @Autowired
     StudentService studentService;
+
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/student")
+    public String postMap(@RequestBody Student student, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        System.out.println("Post mapping working  = "+student);
+        studentService.saveStudent(student, getSiteURL(request));
 
-    public Student postMap(@RequestBody Student student){
-        System.out.println(student);
-        studentService.saveStudent(student);
-
-        return student;
+        return "register_success";
     }
     @GetMapping("/student")
     public List<Student> studList(){
@@ -40,19 +48,31 @@ public class StudentController {
     }
 
     @PutMapping("/student/{id}")
-    public ResponseEntity<?> update(@RequestBody Student student, @PathVariable Integer id) {
+    public ResponseEntity<?> update(@RequestBody Student student, @PathVariable Integer id , HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
         try {
             Student existStudent = studentService.getStudent(id);
             student.setStudentId(id);
-            studentService.saveStudent(student);
+            studentService.saveStudent(student,getSiteURL(request));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/student/{id}")                //how to limit curd opp to respective user??
+    @DeleteMapping("/student/{id}")
     public void delete(@PathVariable Integer id) {
         studentService.deleteStudent(id);
     }
+
+
+    @GetMapping("/verify")
+    public String verifyUser(@Param("code") String code) {
+        System.out.println("cliked the verification link");
+        if (studentService.verify(code)) {
+            return "verify_success";
+        } else {
+            return "verify_fail";
+        }
+    }
+
 }
