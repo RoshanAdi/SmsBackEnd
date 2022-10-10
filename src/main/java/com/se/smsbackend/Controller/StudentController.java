@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,12 +67,12 @@ public class StudentController {
 
 
     @GetMapping("/verify")
-    public String verifyUser(@Param("code") String code) {
-        System.out.println("cliked the verification link");
+    public ModelAndView verifyUser(@Param("code") String code) {
+        System.out.println("clicked the verification link");
         if (studentService.verify(code)) {
-            return "verify_success";
+            return new ModelAndView("redirect:" + "http://localhost:4200/regSuccess");
         } else {
-            return "verify_fail";
+            return new ModelAndView("redirect:" + "http://localhost:4200/regFail");
         }
     }
 
