@@ -18,18 +18,24 @@ public class Student {
 
     private String FirstName;
     private String LastName;
-    private String name;  //full name
+    private String FullName;
     private String birthDate;
     private String Age;
-    private String Email;
+    private String username;      ///username stands for email
     private String Tp;
     private String Address;
-    private String StudentPassword;
+    private String password;
 
-    @Column(name = "verification_code", length = 64)
+    private String Role;
+
+    @Column(columnDefinition = "TEXT", length = 255)
+    @Lob
     private String verificationCode;
 
     private boolean enabled;
+
+
+
     public List<Attendance> getAttendanceList() {
         return AttendanceList;
     }
@@ -70,20 +76,12 @@ public class Student {
         LastName = lastName;
     }
 
-    public String getStudentPassword() {
-        return StudentPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setStudentPassword(String studentPassword) {
-        StudentPassword = studentPassword;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getBirthDate() {
@@ -102,12 +100,20 @@ public class Student {
         Age = age;
     }
 
-    public String getEmail() {
-        return Email;
+    public String getFullName() {
+        return FullName;
     }
 
-    public void setEmail(String email) {
-        Email = email;
+    public void setFullName(String fullName) {
+        FullName = fullName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTp() {
@@ -126,23 +132,8 @@ public class Student {
         Address = address;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "StudentId=" + StudentId +
-                ", subjectList=" + subjectList +
-                ", AttendanceList=" + AttendanceList +
-                ", FirstName='" + FirstName + '\'' +
-                ", LastName='" + LastName + '\'' +
-                ", name='" + name + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", Age='" + Age + '\'' +
-                ", Email='" + Email + '\'' +
-                ", Tp='" + Tp + '\'' +
-                ", Address='" + Address + '\'' +
-                ", StudentPassword='" + StudentPassword + '\'' +
-                '}';
-    }
+
+
 
     public String getVerificationCode() {
         return verificationCode;
@@ -158,6 +149,35 @@ public class Student {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getRole() {
+        return Role;
+    }
+
+    public void setRole(String role) {
+        Role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "StudentId=" + StudentId +
+                ", subjectList=" + subjectList +
+                ", AttendanceList=" + AttendanceList +
+                ", FirstName='" + FirstName + '\'' +
+                ", LastName='" + LastName + '\'' +
+                ", FullName='" + FullName + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", Age='" + Age + '\'' +
+                ", username='" + username + '\'' +
+                ", Tp='" + Tp + '\'' +
+                ", Address='" + Address + '\'' +
+                ", password='" + password + '\'' +
+                ", Role='" + Role + '\'' +
+                ", verificationCode='" + verificationCode + '\'' +
+                ", enabled=" + enabled +
+                '}';
     }
 }
 

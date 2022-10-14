@@ -6,14 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.io.Serializable;
-import java.util.List;
-
 @Repository
 @Component
 public interface StudentRepo extends JpaRepository<Student, Integer> {
-    public List<Student> findByNameContaining(String name);
+    //public List<Student> findByFullNameContaining(String name);
     @Query("SELECT u FROM Student u WHERE u.verificationCode = ?1")
     public Student findByVerificationCode(String code);
+    public Student findByUsername(String username);
+
 
 }
+
+
+
