@@ -29,6 +29,7 @@ public class StudentServiceImpl implements UserDetailsService, StudentService2 {
     @Autowired
     private JavaMailSender mailSender;
 
+
     @Autowired
     private StudentRepo studentRepo;
 
@@ -47,8 +48,9 @@ public class StudentServiceImpl implements UserDetailsService, StudentService2 {
     private Set<SimpleGrantedAuthority> getAuthority(Student student) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
-            authorities.add(new SimpleGrantedAuthority(student.getRole()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+student.getRole()));
         System.out.println("printing generated authorities "+authorities);
+        System.out.println("printing role used for token "+student.getRole());
         return authorities;
     }
 
@@ -113,6 +115,7 @@ public class StudentServiceImpl implements UserDetailsService, StudentService2 {
         helper.setText(content, true);
 
         mailSender.send(message);
+        nStudent.setPassword(bcryptEncoder.encode(student.getPassword()));
         studentRepo.save(nStudent);
 
 
@@ -130,8 +133,8 @@ public class StudentServiceImpl implements UserDetailsService, StudentService2 {
              student.setEnabled(true);
 
             System.out.println("enabling as true...");
-            student.setPassword(bcryptEncoder.encode(student.getPassword()));
-            student.setRole("Student");
+
+            student.setRole("Student");    //cannot log until role sets at this point.
             studentRepo.save(student);
 
 
@@ -141,4 +144,6 @@ public class StudentServiceImpl implements UserDetailsService, StudentService2 {
         }
 
     }
+
+
 }

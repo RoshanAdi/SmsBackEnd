@@ -3,6 +3,7 @@ package com.se.smsbackend.Controller;
 
 import com.se.smsbackend.Dto.StudentDto;
 import com.se.smsbackend.Entity.Student;
+import com.se.smsbackend.Repository.StudentRepo;
 import com.se.smsbackend.Security.AuthToken;
 import com.se.smsbackend.Security.LoginUser;
 import com.se.smsbackend.Security.TokenProvider;
@@ -12,6 +13,7 @@ import com.se.smsbackend.Service.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.se.smsbackend.Site.Utility.getSiteURL;
 
@@ -33,6 +37,8 @@ import static com.se.smsbackend.Site.Utility.getSiteURL;
 public class StudentController {
     @Autowired
     StudentService studentService;
+    @Autowired
+    StudentRepo studentRepo;
     @Autowired
     StudentServiceImpl studentServiceImpl;
 
@@ -48,41 +54,34 @@ public class StudentController {
 
 
     @PostMapping(value="/student/register" )
-    public void saveUser( @RequestBody StudentDto student, HttpServletRequest request)throws MessagingException, UnsupportedEncodingException{
-        //System.out.println(student2);
-        //studentService.saveStudent(student2, getSiteURL(request));
-        //studentService2.saveStudent(student, getSiteURL(request));
-        //studentService.saveStudent(student, getSiteURL(request));
-        studentService2.saveUser(student ,getSiteURL(request));
+    public String saveUser( @RequestBody StudentDto student, HttpServletRequest request)throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
+        if (studentRepo.findByUsername(student.getUsername())!=null) {   //neglected unverified accounts
+            return "This Email already registered";
+        } else {
+            studentService2.saveUser(student, getSiteURL(request));
+            return "Successfully submitted. Please check your Emails ";
+        }
 
     }
 
-/*    @PostMapping("/student/register")
-    public ModelAndView postMap(@RequestBody Student student, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
-        System.out.println("Post mapping working  = "+student);
-        studentService.saveStudent(student, getSiteURL(request));
-        System.out.println("Redirecting" );
 
-        return new ModelAndView("redirect:" + "http://localhost:4200/verify");
-    }*/
-
-
+    @PreAuthorize("hasRole('Student')")
     @GetMapping("/student")
     public List<Student> studList(){
         return studentService.listAllStudents();
     }
-
-/*    @GetMapping("/student/{name}")
-    public List<Student> get(@PathVariable String name) {
+    @PreAuthorize("hasRole('Student')")
+    @GetMapping("/student/{name}")
+    public Student get(@PathVariable String name) {
+        Student student;
         try {
-            List<Student> student= studentService.getByNameContaining(name);
-            System.out.println(name);
+             student= studentService.getByUserName(name);
             System.out.println(student);
-            return student;
+            return studentService.getByUserName(name);
         } catch (NoSuchElementException e) {
             return null;
         }
-    }*/
+    }
 
 /*    @PutMapping("/student/{id}")
     public ResponseEntity<?> update(@RequestBody StudentDto student, @PathVariable Integer id , HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
@@ -132,17 +131,24 @@ public class StudentController {
 
 
 
-/*
-    @PreAuthorize("hasRole('Student')")
-    @GetMapping(value="/student")
+
+   @PreAuthorize("hasRole('Student')")
+    @GetMapping(value="/students")
     public String adminPing(){
         return "Only Admins Can Read This";
     }
-*/
 
-
-
-
-
+   /* @PreAuthorize("hasRole('Student')")
+    @GetMapping("/student")
+    public void getAllheaders(@RequestHeader Map<String,String> headers){
+        System.out.println("going to print headers = "+headers);
+        headers.forEach((key,value) ->{
+            System.out.println("Header Name: "+key+" Header Value: "+value);
+        });
+    }*/
 }
+
+
+
+
 
