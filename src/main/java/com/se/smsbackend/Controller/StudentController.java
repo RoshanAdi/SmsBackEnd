@@ -1,8 +1,10 @@
 
 package com.se.smsbackend.Controller;
 
+import com.se.smsbackend.Dto.StudentDetailProjection;
 import com.se.smsbackend.Dto.StudentDto;
 import com.se.smsbackend.Entity.Student;
+import com.se.smsbackend.Repository.StudentDetailsRepo;
 import com.se.smsbackend.Repository.StudentRepo;
 import com.se.smsbackend.Security.AuthToken;
 import com.se.smsbackend.Security.LoginUser;
@@ -38,6 +40,8 @@ public class StudentController {
     @Autowired
     StudentService studentService;
     @Autowired
+    StudentDetailsRepo studentDetailsRepo;
+    @Autowired
     StudentRepo studentRepo;
     @Autowired
     StudentServiceImpl studentServiceImpl;
@@ -72,12 +76,9 @@ public class StudentController {
     }
     @PreAuthorize("hasRole('Student')")
     @GetMapping("/student/{name}")
-    public Student get(@PathVariable String name) {
-        Student student;
+    public StudentDetailProjection get(@PathVariable String name) {
         try {
-             student= studentService.getByUserName(name);
-            System.out.println(student);
-            return studentService.getByUserName(name);
+            return studentDetailsRepo.findByUsername(name);
         } catch (NoSuchElementException e) {
             return null;
         }
@@ -146,6 +147,10 @@ public class StudentController {
             System.out.println("Header Name: "+key+" Header Value: "+value);
         });
     }*/
+
+
+
+
 }
 
 

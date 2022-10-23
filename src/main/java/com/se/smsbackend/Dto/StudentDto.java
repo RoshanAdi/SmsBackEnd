@@ -4,14 +4,14 @@ import com.se.smsbackend.Entity.Student;
 
 public class StudentDto {
     private boolean enabled;
-    private String FirstName;
-    private String LastName;
-    private String FullName;  
+    private String firstName;
+    private String lastName;
+    private String fullName;
     private String birthDate;
-    private String Age;
+    private String age;
     private String username;
-    private String Tp;
-    private String Address;
+    private String tp;
+    private String address;
     private String password;
     private String Role;
     private int StudentId;
@@ -21,20 +21,22 @@ public class StudentDto {
         Student student = new Student();
         student.setStudentId(StudentId);
         student.setRole(Role);
-        student.setFirstName(FirstName);
-        student.setLastName(LastName);
-        student.setFullName(FullName);
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+        student.setFullName(fullName);
         student.setEnabled(enabled);
         student.setPassword(password);
-        student.setAddress(Address);
-        student.setAge(Age);
+        student.setAddress(address);
+        student.setAge(age);
         student.setUsername(username);
-        student.setTp(Tp);
+        student.setTp(tp);
         student.setBirthDate(birthDate);
         student.setVerificationCode(verificationCode);
 
         return student;
     }
+
+
 
     public boolean isEnabled() {
         return enabled;
@@ -44,28 +46,24 @@ public class StudentDto {
         this.enabled = enabled;
     }
 
+
+
+
+
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
-    }
-
-    public String getLastName() {
-        return LastName;
-    }
-
-    public void setLastName(String lastName) {
-        LastName = lastName;
+        this.firstName = firstName;
     }
 
     public String getFullName() {
-        return FullName;
+        return fullName;
     }
 
     public void setFullName(String fullName) {
-        FullName = fullName;
+        this.fullName = fullName;
     }
 
     public String getBirthDate() {
@@ -76,13 +74,7 @@ public class StudentDto {
         this.birthDate = birthDate;
     }
 
-    public String getAge() {
-        return Age;
-    }
 
-    public void setAge(String age) {
-        Age = age;
-    }
 
     public String getUsername() {
         return username;
@@ -92,20 +84,36 @@ public class StudentDto {
         this.username = username;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
     public String getTp() {
-        return Tp;
+        return tp;
     }
 
     public void setTp(String tp) {
-        Tp = tp;
+        this.tp = tp;
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public String getPassword() {
