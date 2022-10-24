@@ -14,6 +14,7 @@ import com.se.smsbackend.Service.StudentService2;
 import com.se.smsbackend.Service.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,23 +84,26 @@ public class StudentController {
             return null;
         }
     }
-
-/*    @PutMapping("/student/{id}")
-    public ResponseEntity<?> update(@RequestBody StudentDto student, @PathVariable Integer id , HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
-        try {
-            Student existStudent = studentService.getStudent(id);
-            student.setStudentId(id);
-            studentService.saveStudent(student,getSiteURL(request));
+    @PreAuthorize("hasRole('Student')")
+   @PutMapping("/student/{Username}")
+    public ResponseEntity<?> update(@RequestBody Student student, @PathVariable String Username , HttpServletRequest request)  {
+           Student existStudent = studentRepo.findByUsername(Username);
+        System.out.println("printing receved for update = "+student);
+           existStudent.setAddress(student.getAddress());
+            existStudent.setFullName(student.getFullName());
+            existStudent.setTp(student.getTp());
+            existStudent.setFirstName(student.getFirstName());
+            System.out.println("printing student got for updating details = "+existStudent);
+            studentRepo.save(existStudent);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
 
+        }
+
+/*
     @DeleteMapping("/student/{id}")
     public void delete(@PathVariable Integer id) {
         studentService.deleteStudent(id);
-    }
+    }*/
 
     @GetMapping("/verify")
 
@@ -139,14 +143,6 @@ public class StudentController {
         return "Only Admins Can Read This";
     }
 
-   /* @PreAuthorize("hasRole('Student')")
-    @GetMapping("/student")
-    public void getAllheaders(@RequestHeader Map<String,String> headers){
-        System.out.println("going to print headers = "+headers);
-        headers.forEach((key,value) ->{
-            System.out.println("Header Name: "+key+" Header Value: "+value);
-        });
-    }*/
 
 
 

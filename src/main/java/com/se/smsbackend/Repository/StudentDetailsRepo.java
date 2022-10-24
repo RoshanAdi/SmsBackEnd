@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StudentDetailsRepo extends JpaRepository<Student , Integer> {
     StudentDetailProjection findByUsername(String username);
-    //public List<Student> findByFullNameContaining(String name);
+
+
 }

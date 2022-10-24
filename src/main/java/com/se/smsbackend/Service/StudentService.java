@@ -28,8 +28,6 @@ private JavaMailSender mailSender;
     public Student getByUserName(String name)
     {return studentRepo.findByUsername(name);}
 
-    public void deleteStudent(Integer id) {
-        studentRepo.deleteById(id);
-    }
+
 
 }
