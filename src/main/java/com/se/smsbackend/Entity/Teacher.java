@@ -9,12 +9,19 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int TeacherId;
-    private String FirstName;
-    private String LastName;
-    private String name;
-    private String Email;
-    private String Tp;
-    private String Address;
+    private String firstName;
+    private String lastName;
+    private String fullName;
+    private String username;
+    private String tp;
+    private String address;
+    private String nIc;
+    private  String password;
+    private  String role;
+    private  boolean enabled;
+    private  String verificationCode;
+
+
 
     @ManyToMany(mappedBy = "TeacherListForSubject")
     private List<Subject> subjectListForTeacher = new ArrayList<>();
@@ -27,6 +34,7 @@ public class Teacher {
         this.subjectListForTeacher = subjectListForTeacher;
     }
 
+
     public int getTeacherId() {
         return TeacherId;
     }
@@ -36,64 +44,112 @@ public class Teacher {
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getEmail() {
-        return Email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        Email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTp() {
-        return Tp;
+        return tp;
     }
 
     public void setTp(String tp) {
-        Tp = tp;
+        this.tp = tp;
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
+    }
+
+    public String getnIc() {
+        return nIc;
+    }
+
+    public void setnIc(String nIc) {
+        this.nIc = nIc;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     @Override
     public String toString() {
         return "Teacher{" +
                 "TeacherId=" + TeacherId +
-                ", FirstName='" + FirstName + '\'' +
-                ", LastName='" + LastName + '\'' +
-                ", name='" + name + '\'' +
-                ", Email='" + Email + '\'' +
-                ", Tp='" + Tp + '\'' +
-                ", Address='" + Address + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
+                ", tp='" + tp + '\'' +
+                ", address='" + address + '\'' +
+                ", nIc='" + nIc + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", enabled=" + enabled +
+                ", verificationCode='" + verificationCode + '\'' +
                 ", subjectListForTeacher=" + subjectListForTeacher +
                 '}';
     }
 }
+
+
+
