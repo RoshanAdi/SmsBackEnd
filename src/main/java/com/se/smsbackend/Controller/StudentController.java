@@ -76,7 +76,7 @@ public class StudentController {
         return studentService.listAllStudents();
     }
     @PreAuthorize("hasRole('Student')")
-    @GetMapping("/student/{name}")
+    @GetMapping("/Student/{name}")
     public StudentDetailProjection get(@PathVariable String name) {
         try {
             return studentDetailsRepo.findByUsername(name);
@@ -85,7 +85,7 @@ public class StudentController {
         }
     }
     @PreAuthorize("hasRole('Student')")
-   @PutMapping("/student/{Username}")
+   @PutMapping("/Student/{Username}")
     public ResponseEntity<?> update(@RequestBody Student student, @PathVariable String Username , HttpServletRequest request)  {
            Student existStudent = studentRepo.findByUsername(Username);
         System.out.println("printing receved for update = "+student);

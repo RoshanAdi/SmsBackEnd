@@ -65,7 +65,7 @@ public class TeacherServiceImpl implements TeacherService {
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", teacher.getFullName());
-        String verifyURL = siteURL + "/verify?code=" + teacher.getVerificationCode();
+        String verifyURL = siteURL + "/verifyT?code=" + teacher.getVerificationCode();
         //System.out.println(nStudent.getVerificationCode());
 
 
@@ -78,6 +78,27 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setPassword(bcryptEncoder.encode(teacher1.getPassword()));
         teacherRepo.save(teacher);
 
+
+    }
+    public boolean verify(String verificationCode) {
+        Teacher teacher = teacherRepo.findByVerificationCode(verificationCode);
+        System.out.println("verifying...");
+        System.out.println("verification code received "+verificationCode);
+        //System.out.println("verfication code of the saved stud"+teacher.getVerificationCode());
+
+        if (teacher == null || teacher.isEnabled()) {
+            return false;
+        }
+        else {
+            teacher.setEnabled(true);
+
+            System.out.println("enabling as true...");
+
+            teacher.setRole("Teacher");    //cannot log until role sets at this point.
+            teacherRepo.save(teacher);
+
+            return true;
+        }
 
     }
 

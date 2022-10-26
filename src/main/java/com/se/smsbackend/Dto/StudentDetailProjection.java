@@ -10,11 +10,12 @@ public class StudentDetailProjection {
     private final String age;
     private final String tp;
     private final String address;
+    private final String role;
 
 
 
 
-    public StudentDetailProjection(String username, String birthDate, String fullName, String lastName, String firstName, String age, String tp, String address) {
+    public StudentDetailProjection(String username, String birthDate, String fullName, String lastName, String firstName, String age, String tp, String address, String role) {
         Username = username;
         this.birthDate = birthDate;
         this.fullName = fullName;
@@ -23,6 +24,7 @@ public class StudentDetailProjection {
         this.age = age;
         this.tp = tp;
         this.address = address;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -55,5 +57,9 @@ public class StudentDetailProjection {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getRole() {
+        return role;
     }
 }
