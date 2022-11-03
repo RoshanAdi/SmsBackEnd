@@ -1,6 +1,10 @@
 package com.se.smsbackend.Controller;
 
+import com.se.smsbackend.Entity.Assignment;
+import com.se.smsbackend.Entity.Subject;
 import com.se.smsbackend.Entity.Teacher;
+import com.se.smsbackend.Repository.AssignmentRepo;
+import com.se.smsbackend.Repository.SubjectRepo;
 import com.se.smsbackend.Repository.TeacherRepo;
 import com.se.smsbackend.Service.TeacherService;
 import com.se.smsbackend.Service.TeacherServiceImpl;
@@ -16,7 +20,7 @@ import javax.mail.MessagingException;
 import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static com.se.smsbackend.Site.Utility.getSiteURL;
 
@@ -24,28 +28,37 @@ import static com.se.smsbackend.Site.Utility.getSiteURL;
 @RequestMapping("/")
 @CrossOrigin(origins = "*")
 public class TeacherController {
- @Autowired
+    @Autowired
     TeacherRepo teacherRepo;
- @Autowired
+    @Autowired
     TeacherService teacherService;
- @Autowired
+    @Autowired
     TeacherServiceImpl teacherServiceImpl;
+    @Autowired
+    SubjectRepo subjectRepo;
+    @Autowired
+    AssignmentRepo assignmentRepo;
 
-    @PostMapping(value="/teacher/register" )
-    public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request)throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
-        if (teacherRepo.findByUsername(teacher.getUsername())!=null) {   //neglected unverified accounts
-            return "This Email already registered";
-        } else {
-            teacherService.saveTeacher(teacher, getSiteURL(request));
-            return "Successfully submitted. Please check your Emails ";
+    @PostMapping(value = "/teacher/register")
+    public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
+        try {
+            if (teacherRepo.findByUsername(teacher.getUsername()) != null) {   //neglected unverified accounts
+                return "This Email already registered";
+            } else {
+                teacherService.saveTeacher(teacher, getSiteURL(request));
+                return "Successfully submitted. Please check your Emails ";
+            }
         }
-
+        catch (NullPointerException e){
+            teacherService.saveTeacher(teacher, getSiteURL(request));
+        }
+        return null;
     }
 
     @GetMapping("/verifyT")
 
     public ModelAndView verifyUser(@Param("code") String code) {
-        System.out.println("clicked the verification link the code is "+code);
+        System.out.println("clicked the verification link the code is " + code);
         if (teacherServiceImpl.verify(code)) {
             return new ModelAndView("redirect:" + "http://localhost:4200/regSuccess");
 
@@ -60,7 +73,7 @@ public class TeacherController {
         try {
             Teacher teacher = teacherRepo.findByUsername(name);
             Teacher teacher1 = new Teacher();
-            teacher1.setUsername(teacher.getUsername()) ;
+            teacher1.setUsername(teacher.getUsername());
             teacher1.setFirstName(teacher.getFirstName());
             teacher1.setAddress(teacher.getAddress());
             teacher1.setFullName(teacher.getFullName());
@@ -71,19 +84,74 @@ public class TeacherController {
             return teacher1;
         } catch (NoSuchElementException | NullPointerException e) {
             return null;
-        }    }
+        }
+    }
+
     @PreAuthorize("hasRole('Teacher')")
     @PutMapping("/Teacher/{Username}")
-    public ResponseEntity<?> update(@RequestBody Teacher teacher, @PathVariable String Username , HttpServletRequest request)  {
+    public ResponseEntity<?> update(@RequestBody Teacher teacher, @PathVariable String Username, HttpServletRequest request) {
         Teacher existTeacher = teacherRepo.findByUsername(Username);
         existTeacher.setAddress(teacher.getAddress());
         existTeacher.setFullName(teacher.getFullName());
         existTeacher.setTp(teacher.getTp());
         existTeacher.setFirstName(teacher.getFirstName());
         existTeacher.setnIc(teacher.getnIc());
-               teacherRepo.save(existTeacher);
+        teacherRepo.save(existTeacher);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping(value = "/Subject/Create")
+    public String saveSubject(@RequestBody Subject subject) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
+        if (subjectRepo.findBySubjectName(subject.getSubjectName()) != null) {   //neglected unverified accounts
+
+            return "This Subject is already there";
+        } else {
+            subjectRepo.save(subject);
+            return "Successfully created";
+        }
+
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/Subject/List")
+    public List<Subject> subList() {
+        return subjectRepo.findAll();
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/Subject/{id}")
+    public Subject subject(@PathVariable int id) {
+
+        return subjectRepo.findById(id);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @PutMapping("/Subject/Update/{subjectId}")
+    public ResponseEntity<?> updateSub(@RequestBody Assignment assignment, @PathVariable int subjectId, HttpServletRequest request) {
+        Subject existSubject = subjectRepo.findById(subjectId);
+        assignment.setSubjectForAssignment(existSubject);
+        assignmentRepo.save(assignment);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @PutMapping("/Subject/edit/{subjectId}")
+    public ResponseEntity<?> editSub(@RequestBody Subject subject, @PathVariable int subjectId, HttpServletRequest request) {
+        Subject existSubject = subjectRepo.findById(subjectId);
+        existSubject.setSubjectName(subject.getSubjectName());
+        existSubject.setDescription(subject.getDescription());
+        subjectRepo.save(existSubject);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @PutMapping("/Assignment/edit/{assigmentID}")
+    public ResponseEntity<?> editAssignment(@RequestBody Assignment assignment, @PathVariable int assigmentID, HttpServletRequest request) {
+        Assignment existAssignment = assignmentRepo.findById(assigmentID);
+        existAssignment.setAssigmentTitle(assignment.getAssigmentTitle());
+        existAssignment.setAssigmentDiscription(assignment.getAssigmentDiscription());
+        existAssignment.setAssigmentData(assignment.getAssigmentData());
+        assignmentRepo.save(existAssignment);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

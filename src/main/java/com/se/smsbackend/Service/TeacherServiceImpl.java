@@ -28,8 +28,6 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher saveTeacher(Teacher teacher, String siteURL) throws MessagingException, UnsupportedEncodingException {
         System.out.println("trying to save username and pass "+teacher.getPassword());
-       //Teacher teacher1 = teacher.getStudentFromDto();
-        //System.out.println("printing role "+nStudent.getRole());
         teacher.setRole("Student");
 
         teacher.setEnabled(false);

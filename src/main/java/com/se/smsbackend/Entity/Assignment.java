@@ -1,18 +1,28 @@
 package com.se.smsbackend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int AssigmentID;
-    private String AssigmentTitle;
-    private String AssigmentDiscription;
-    private String AssigmentData;      // change the type
+    private int assigmentID;
+    private String assigmentTitle;
+    private String assigmentDiscription;
+    private String assigmentData;      // change the type
 
     @ManyToOne
+    @JoinColumn(name = "subject4assign", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Subject subjectForAssignment;
+
+
+
 
     public Subject getSubjectForAssignment() {
         return subjectForAssignment;
@@ -23,44 +33,45 @@ public class Assignment {
     }
 
     public int getAssigmentID() {
-        return AssigmentID;
+        return assigmentID;
     }
 
     public void setAssigmentID(int assigmentID) {
-        AssigmentID = assigmentID;
+        this.assigmentID = assigmentID;
     }
 
     public String getAssigmentTitle() {
-        return AssigmentTitle;
+        return assigmentTitle;
     }
 
     public void setAssigmentTitle(String assigmentTitle) {
-        AssigmentTitle = assigmentTitle;
+        this.assigmentTitle = assigmentTitle;
     }
 
     public String getAssigmentDiscription() {
-        return AssigmentDiscription;
+        return assigmentDiscription;
     }
 
     public void setAssigmentDiscription(String assigmentDiscription) {
-        AssigmentDiscription = assigmentDiscription;
+        this.assigmentDiscription = assigmentDiscription;
     }
 
     public String getAssigmentData() {
-        return AssigmentData;
+        return assigmentData;
     }
 
     public void setAssigmentData(String assigmentData) {
-        AssigmentData = assigmentData;
+        this.assigmentData = assigmentData;
     }
 
     @Override
     public String toString() {
         return "Assignment{" +
-                "AssigmentID=" + AssigmentID +
-                ", AssigmentTitle='" + AssigmentTitle + '\'' +
-                ", AssigmentDiscription='" + AssigmentDiscription + '\'' +
-                ", AssigmentData='" + AssigmentData + '\'' +
+                "assigmentID=" + assigmentID +
+                ", assigmentTitle='" + assigmentTitle + '\'' +
+                ", assigmentDiscription='" + assigmentDiscription + '\'' +
+                ", assigmentData='" + assigmentData + '\'' +
+                ", subjectForAssignment=" + subjectForAssignment +
                 '}';
     }
 }
