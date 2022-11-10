@@ -36,7 +36,6 @@ import static com.se.smsbackend.Site.Utility.getSiteURL;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "*")
 public class StudentController {
     @Autowired
     StudentService studentService;

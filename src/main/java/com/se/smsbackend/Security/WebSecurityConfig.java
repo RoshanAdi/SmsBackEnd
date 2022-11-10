@@ -13,8 +13,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @Configuration
@@ -32,13 +34,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         System.out.println("Encoding");
         auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
-
-
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.csrf().disable()
+                .cors()
+                .and()
                 .authorizeRequests().antMatchers("/verify/**","/verifyT/**").permitAll()
                 .antMatchers("/student").hasRole("Student")
                 .antMatchers("/student/register","/login","/teacher/register").permitAll()
@@ -51,6 +54,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.cors().configurationSource(request -> {
+            var cors = new CorsConfiguration();
+
+            cors.setAllowedOrigins(List.of("http://localhost:57865"));
+            cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
+            cors.setAllowedHeaders(List.of("*"));
+            cors.setAllowCredentials(true);
+
+            return cors;
+        });
     }
 
     @Bean

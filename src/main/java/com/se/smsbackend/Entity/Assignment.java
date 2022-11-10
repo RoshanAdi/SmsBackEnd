@@ -5,6 +5,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Assignment {
@@ -21,7 +23,11 @@ public class Assignment {
     @JsonIgnore
     private Subject subjectForAssignment;
 
+    @OneToMany(mappedBy = "assignmentQuestions", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<McqQuestion> mcqList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "assignmentOfFile", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<FileDB> fileDBList = new ArrayList<>();
 
 
     public Subject getSubjectForAssignment() {
@@ -64,6 +70,22 @@ public class Assignment {
         this.assigmentData = assigmentData;
     }
 
+    public List<McqQuestion> getMcqList() {
+        return mcqList;
+    }
+
+    public void setMcqList(List<McqQuestion> mcqList) {
+        this.mcqList = mcqList;
+    }
+
+    public List<FileDB> getFileDBList() {
+        return fileDBList;
+    }
+
+    public void setFileDBList(List<FileDB> fileDBList) {
+        this.fileDBList = fileDBList;
+    }
+
     @Override
     public String toString() {
         return "Assignment{" +
@@ -72,6 +94,7 @@ public class Assignment {
                 ", assigmentDiscription='" + assigmentDiscription + '\'' +
                 ", assigmentData='" + assigmentData + '\'' +
                 ", subjectForAssignment=" + subjectForAssignment +
+                ", mcqList=" + mcqList +
                 '}';
     }
 }

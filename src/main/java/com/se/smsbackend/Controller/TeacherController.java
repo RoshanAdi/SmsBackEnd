@@ -1,9 +1,11 @@
 package com.se.smsbackend.Controller;
 
 import com.se.smsbackend.Entity.Assignment;
+import com.se.smsbackend.Entity.McqQuestion;
 import com.se.smsbackend.Entity.Subject;
 import com.se.smsbackend.Entity.Teacher;
 import com.se.smsbackend.Repository.AssignmentRepo;
+import com.se.smsbackend.Repository.McqRepo;
 import com.se.smsbackend.Repository.SubjectRepo;
 import com.se.smsbackend.Repository.TeacherRepo;
 import com.se.smsbackend.Service.TeacherService;
@@ -20,13 +22,13 @@ import javax.mail.MessagingException;
 import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.se.smsbackend.Site.Utility.getSiteURL;
 
 @RestController
 @RequestMapping("/")
-@CrossOrigin(origins = "*")
 public class TeacherController {
     @Autowired
     TeacherRepo teacherRepo;
@@ -38,6 +40,8 @@ public class TeacherController {
     SubjectRepo subjectRepo;
     @Autowired
     AssignmentRepo assignmentRepo;
+    @Autowired
+    McqRepo mcqRepo;
 
     @PostMapping(value = "/teacher/register")
     public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
@@ -153,5 +157,35 @@ public class TeacherController {
         existAssignment.setAssigmentData(assignment.getAssigmentData());
         assignmentRepo.save(existAssignment);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @DeleteMapping("/Assignment/delete/{id}")
+    public void deleteAssi(@PathVariable Integer id) {
+        assignmentRepo.deleteById(id);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @DeleteMapping("/Subject/delete/{id}")
+    public void deleteSub(@PathVariable Integer id) {
+        subjectRepo.deleteById(id);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping(value = "/Mcq/create/{AssiId}")
+    public String AddMcq(@RequestBody McqQuestion mcqQuestion, @PathVariable int AssiId, HttpServletRequest request) {
+        Assignment existAssi = assignmentRepo.findById(AssiId);
+        mcqQuestion.setAssignmentQuestions(existAssi);
+            mcqRepo.save(mcqQuestion);
+         return "saved";
+
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/Assignment/{id}")
+    public Assignment Assigment4Mcq(@PathVariable int id) {
+
+        return assignmentRepo.findById(id);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @DeleteMapping("/Mcq/delete/{id}")
+    public void deleteMcq(@PathVariable Integer id) {
+        mcqRepo.deleteById(id);
     }
 }
