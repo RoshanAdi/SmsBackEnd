@@ -23,7 +23,7 @@ public class Assignment {
     @JsonIgnore
     private Subject subjectForAssignment;
 
-    @OneToMany(mappedBy = "assignmentQuestions", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "assignmentQuestions", cascade = CascadeType.ALL ,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<McqQuestion> mcqList = new ArrayList<>();
 
     @OneToMany(mappedBy = "assignmentOfFile", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)

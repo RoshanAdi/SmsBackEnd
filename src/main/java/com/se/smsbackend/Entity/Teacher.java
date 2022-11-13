@@ -1,8 +1,11 @@
 package com.se.smsbackend.Entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Teacher {
@@ -23,17 +26,18 @@ public class Teacher {
 
 
 
-    @ManyToMany(mappedBy = "TeacherListForSubject")
-    private List<Subject> subjectListForTeacher = new ArrayList<>();
 
-    public List<Subject> getSubjectListForTeacher() {
-        return subjectListForTeacher;
+    @ManyToMany (mappedBy = "teachers", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Subject> subjects = new HashSet<>();
+
+    public Set<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setSubjectListForTeacher(List<Subject> subjectListForTeacher) {
-        this.subjectListForTeacher = subjectListForTeacher;
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
     }
-
 
     public int getTeacherId() {
         return TeacherId;
@@ -146,7 +150,7 @@ public class Teacher {
                 ", role='" + role + '\'' +
                 ", enabled=" + enabled +
                 ", verificationCode='" + verificationCode + '\'' +
-                ", subjectListForTeacher=" + subjectListForTeacher +
+                ", subjects=" + subjects +
                 '}';
     }
 }

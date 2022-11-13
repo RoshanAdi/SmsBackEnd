@@ -15,6 +15,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,8 +24,10 @@ import javax.mail.MessagingException;
 import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static com.se.smsbackend.Site.Utility.getSiteURL;
 
@@ -85,6 +89,7 @@ public class TeacherController {
             teacher1.setRole(teacher.getRole());
             teacher1.setnIc(teacher.getnIc());
             teacher1.setTp(teacher.getTp());
+            teacher1.setSubjects(teacher.getSubjects());
             return teacher1;
         } catch (NoSuchElementException | NullPointerException e) {
             return null;
@@ -188,4 +193,34 @@ public class TeacherController {
     public void deleteMcq(@PathVariable Integer id) {
         mcqRepo.deleteById(id);
     }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @PutMapping("/Teacher/Enroll/{subjectID}")
+    public ResponseEntity<?> enrollTeacher( @PathVariable int subjectID) {
+  /*      Subject subject = subjectRepo.findById(subjectID);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentTeacher = authentication.getName();
+        Teacher teacher = teacherRepo.findByUsername(currentTeacher);
+        if (teacher.getSubjects()==null){
+        Set<Subject> subjects = new HashSet<>();
+            subjects.add(subject);
+            teacher.setSubjects(subjects);
+            teacherRepo.save(teacher);}
+        else { teacher.getSubjects().add(subject);
+            teacherRepo.save(teacher);}*/
+        Subject subject = subjectRepo.findById(subjectID);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentTeacher = authentication.getName();
+        Teacher teacher = teacherRepo.findByUsername(currentTeacher);
+        if (subject.getTeachers()==null){
+            Set<Teacher> teachers = new HashSet<>();
+            teachers.add(teacher);
+            subject.setTeachers(teachers);
+            subjectRepo.save(subject);}
+        else { subject.getTeachers().add(teacher);
+            subjectRepo.save(subject);}
+        System.out.println(teacher.getSubjects());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

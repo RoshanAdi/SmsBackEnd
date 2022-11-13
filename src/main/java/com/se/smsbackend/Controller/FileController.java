@@ -24,7 +24,7 @@ public class FileController {
 
 
     @PreAuthorize("hasRole('Teacher')")
-    @RequestMapping(value = "/upload/{id}", method = RequestMethod.POST,
+    @RequestMapping(value = "/files/upload/{id}", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> uploadFile(@PathVariable int id,@RequestParam("file") MultipartFile file ) {
         String message = "";
@@ -39,7 +39,7 @@ public class FileController {
     }
 
     @PreAuthorize("hasRole('Teacher')")
-    @GetMapping("/files/{id}")
+    @GetMapping("/files/download/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         FileDB fileDB = storageService.getFile(id);
 
