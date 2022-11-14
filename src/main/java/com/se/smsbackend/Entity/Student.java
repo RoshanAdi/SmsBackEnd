@@ -26,7 +26,7 @@ public class Student {
     private String address;
     private String password;
 
-    private String Role;
+    private String role;
 
     @Column(columnDefinition = "TEXT", length = 255)
     @Lob
@@ -138,13 +138,7 @@ public class Student {
         this.enabled = enabled;
     }
 
-    public String getRole() {
-        return Role;
-    }
 
-    public void setRole(String role) {
-        Role = role;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -162,6 +156,14 @@ public class Student {
         this.fullName = fullName;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -177,7 +179,7 @@ public class Student {
                 ", tp='" + tp + '\'' +
                 ", address='" + address + '\'' +
                 ", password='" + password + '\'' +
-                ", Role='" + Role + '\'' +
+                ", role='" + role + '\'' +
                 ", verificationCode='" + verificationCode + '\'' +
                 ", enabled=" + enabled +
                 '}';

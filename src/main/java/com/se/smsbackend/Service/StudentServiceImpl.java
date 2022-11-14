@@ -2,7 +2,9 @@ package com.se.smsbackend.Service;
 
 import com.se.smsbackend.Dto.StudentDto;
 import com.se.smsbackend.Entity.Student;
+import com.se.smsbackend.Entity.Teacher;
 import com.se.smsbackend.Repository.StudentRepo;
+import com.se.smsbackend.Repository.TeacherRepo;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,10 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service(value = "userService")
 @Component
@@ -35,22 +34,40 @@ public class StudentServiceImpl implements UserDetailsService, StudentService2 {
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
+    @Autowired
+    private TeacherRepo teacherRepo;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Student student = studentRepo.findByUsername(username);
-        System.out.println("username "+student.getUsername()+" pass "+student.getPassword());
-        if(student == null){
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-        return new org.springframework.security.core.userdetails.User(student.getUsername(), student.getPassword(), getAuthority(student));
-    }
+Student student = null;
+try {
+    student = studentRepo.findByUsername(username);
+}catch (UsernameNotFoundException e){return null;}
 
-    private Set<SimpleGrantedAuthority> getAuthority(Student student) {
+finally {
+    if (student == null){
+        Teacher teacher = teacherRepo.findByUsername(username);
+        return new org.springframework.security.core.userdetails.User(teacher.getUsername(), teacher.getPassword(), getAuthorityTeacher(teacher));
+
+    }
+    else {return new org.springframework.security.core.userdetails.User(student.getUsername(), student.getPassword(), getAuthorityStud(student));
+    }
+}}
+
+
+    private Set<SimpleGrantedAuthority> getAuthorityStud(Student student) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
             authorities.add(new SimpleGrantedAuthority("ROLE_"+student.getRole()));
         System.out.println("printing generated authorities "+authorities);
         System.out.println("printing role used for token "+student.getRole());
+        return authorities;
+    }
+    private Set<SimpleGrantedAuthority> getAuthorityTeacher(Teacher teacher) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+teacher.getRole()));
+        System.out.println("printing generated authorities "+authorities);
+        System.out.println("printing role used for token "+teacher.getRole());
         return authorities;
     }
 

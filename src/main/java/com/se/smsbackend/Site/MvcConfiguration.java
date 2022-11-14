@@ -30,4 +30,5 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> enableDefaultServlet() {
         return (factory) -> factory.setRegisterDefaultServlet(true);
     }
+
 }
