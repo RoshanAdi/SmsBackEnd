@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AssignmentRepo extends JpaRepository<Assignment, Integer> {
-    public Assignment findById(int id);
+    public  Assignment findById(int id);
 }

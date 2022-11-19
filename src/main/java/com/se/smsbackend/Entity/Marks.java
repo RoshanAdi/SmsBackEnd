@@ -1,66 +1,94 @@
 package com.se.smsbackend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
 public class Marks {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int MarkId;
-    private String StudentId;    //not sure the type here
-    private String SubjectId;   //not sure whether these will need or not!
-    private String Marks;
+    private int marksId;
+    private String marksupdateId;
+    private String marks;
+    private String studentUsername;
+    private int assignmentId;
+    private int attempt;
 
     @ManyToOne
-    private Subject subjectForMark;    //may be need to connect with student too
+    @JoinColumn(name = "student_marks", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Student student;
 
-    public Subject getSubjectForMark() {
-        return subjectForMark;
+    @ManyToOne
+    @JoinColumn(name = "assigmentset", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Assignment assignment;
+
+    public Assignment getAssignment() {
+        return assignment;
     }
 
-    public void setSubjectForMark(Subject subjectForMark) {
-        this.subjectForMark = subjectForMark;
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
     }
 
-    public int getMarkId() {
-        return MarkId;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setMarkId(int markId) {
-        MarkId = markId;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
-    public String getStudentId() {
-        return StudentId;
+    public int getMarksId() {
+        return marksId;
     }
 
-    public void setStudentId(String studentId) {
-        StudentId = studentId;
-    }
-
-    public String getSubjectId() {
-        return SubjectId;
-    }
-
-    public void setSubjectId(String subjectId) {
-        SubjectId = subjectId;
+    public void setMarksId(int marksId) {
+        this.marksId = marksId;
     }
 
     public String getMarks() {
-        return Marks;
+        return marks;
     }
 
     public void setMarks(String marks) {
-        Marks = marks;
+        this.marks = marks;
     }
 
-    @Override
-    public String toString() {
-        return "Marks{" +
-                "MarkId=" + MarkId +
-                ", StudentId='" + StudentId + '\'' +
-                ", SubjectId='" + SubjectId + '\'' +
-                ", Marks='" + Marks + '\'' +
-                '}';
+    public String getStudentUsername() {
+        return studentUsername;
+    }
+
+    public void setStudentUsername(String studentUsername) {
+        this.studentUsername = studentUsername;
+    }
+
+    public int getAssignmentId() {
+        return assignmentId;
+    }
+
+    public void setAssignmentId(int assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
+    public String getMarksupdateId() {
+        return marksupdateId;
+    }
+
+    public void setMarksupdateId(String marksupdateId) {
+        this.marksupdateId = marksupdateId;
+    }
+
+    public int getAttempt() {
+        return attempt;
+    }
+
+    public void setAttempt(int attempt) {
+        this.attempt = attempt;
     }
 }

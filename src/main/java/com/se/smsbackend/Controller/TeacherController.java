@@ -123,13 +123,13 @@ public class TeacherController {
 
     }
 
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/Subject/List")
     public List<Subject> subList() {
         return subjectRepo.findAll();
     }
 
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/Subject/{id}")
     public Subject subject(@PathVariable int id) {
 
@@ -182,7 +182,7 @@ public class TeacherController {
          return "saved";
 
     }
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/Assignment/{id}")
     public Assignment Assigment4Mcq(@PathVariable int id) {
 
@@ -197,17 +197,6 @@ public class TeacherController {
     @PreAuthorize("hasRole('Teacher')")
     @PutMapping("/Teacher/Enroll/{subjectID}")
     public ResponseEntity<?> enrollTeacher( @PathVariable int subjectID) {
-  /*      Subject subject = subjectRepo.findById(subjectID);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentTeacher = authentication.getName();
-        Teacher teacher = teacherRepo.findByUsername(currentTeacher);
-        if (teacher.getSubjects()==null){
-        Set<Subject> subjects = new HashSet<>();
-            subjects.add(subject);
-            teacher.setSubjects(subjects);
-            teacherRepo.save(teacher);}
-        else { teacher.getSubjects().add(subject);
-            teacherRepo.save(teacher);}*/
         Subject subject = subjectRepo.findById(subjectID);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentTeacher = authentication.getName();

@@ -26,19 +26,21 @@ public class Subject implements Serializable {
     private String createdBy;
     private String createrFirstName;
 
-    @ManyToMany
-    private List<Student> StudentList = new ArrayList<>();
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Subject_Teacher",joinColumns = @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),inverseJoinColumns = @JoinColumn(name = "TeacherId", referencedColumnName = "TeacherId")    )
     @JsonIgnore
     private Set<Teacher> teachers;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Subject_Student",joinColumns = @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),inverseJoinColumns = @JoinColumn(name = "StudentId", referencedColumnName = "StudentId")    )
+    @JsonIgnore
+    private Set<Student> students;
+
 
     @OneToMany(mappedBy = "subjectForAssignment", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<Assignment> AssigmentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "subjectForMark")
-    private List<Marks> MarksList = new ArrayList<>();
 
     public String getCreaterFirstName() {
         return createrFirstName;
@@ -48,13 +50,7 @@ public class Subject implements Serializable {
         this.createrFirstName = createrFirstName;
     }
 
-    public List<Marks> getMarksList() {
-        return MarksList;
-    }
 
-    public void setMarksList(List<Marks> marksList) {
-        MarksList = marksList;
-    }
 
     public List<Assignment> getAssigmentList() {
         return AssigmentList;
@@ -72,12 +68,12 @@ public class Subject implements Serializable {
         this.teachers = teachers;
     }
 
-    public List<Student> getStudentList() {
-        return StudentList;
+    public Set<Student> getStudents() {
+        return students;
     }
 
-    public void setStudentList(List<Student> studentList) {
-        StudentList = studentList;
+    public void setStudents(Set<Student> students) {
+        this.students = students;
     }
 
     public int getSubjectId() {

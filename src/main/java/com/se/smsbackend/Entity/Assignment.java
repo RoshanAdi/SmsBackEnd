@@ -6,7 +6,9 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Assignment {
@@ -15,7 +17,14 @@ public class Assignment {
     private int assigmentID;
     private String assigmentTitle;
     private String assigmentDiscription;
-    private String assigmentData;      // change the type
+    private String assigmentData;
+    private String startTime;
+    private String endTime;
+    private int noOfAttempts;
+
+    @OneToMany(mappedBy = "assignment",cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<Marks> marksSet = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "subject4assign", nullable = true)
@@ -84,6 +93,38 @@ public class Assignment {
 
     public void setFileDBList(List<FileDB> fileDBList) {
         this.fileDBList = fileDBList;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getNoOfAttempts() {
+        return noOfAttempts;
+    }
+
+    public void setNoOfAttempts(int noOfAttempts) {
+        this.noOfAttempts = noOfAttempts;
+    }
+
+    public Set<Marks> getMarksSet() {
+        return marksSet;
+    }
+
+    public void setMarksSet(Set<Marks> marksSet) {
+        this.marksSet = marksSet;
     }
 
     @Override

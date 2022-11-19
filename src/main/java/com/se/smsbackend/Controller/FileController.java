@@ -38,7 +38,7 @@ public class FileController {
         }
     }
 
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/files/download/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         FileDB fileDB = storageService.getFile(id);
