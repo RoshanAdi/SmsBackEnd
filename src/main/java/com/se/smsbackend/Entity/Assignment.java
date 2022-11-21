@@ -32,6 +32,8 @@ public class Assignment {
     @JsonIgnore
     private Subject subjectForAssignment;
 
+    @OneToMany(mappedBy = "assignmentEssayQ", cascade = CascadeType.ALL ,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<EssayQuestion> EssayList = new ArrayList<>();
     @OneToMany(mappedBy = "assignmentQuestions", cascade = CascadeType.ALL ,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<McqQuestion> mcqList = new ArrayList<>();
 
@@ -127,6 +129,14 @@ public class Assignment {
         this.marksSet = marksSet;
     }
 
+    public List<EssayQuestion> getEssayList() {
+        return EssayList;
+    }
+
+    public void setEssayList(List<EssayQuestion> essayList) {
+        EssayList = essayList;
+    }
+
     @Override
     public String toString() {
         return "Assignment{" +
@@ -134,8 +144,14 @@ public class Assignment {
                 ", assigmentTitle='" + assigmentTitle + '\'' +
                 ", assigmentDiscription='" + assigmentDiscription + '\'' +
                 ", assigmentData='" + assigmentData + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", noOfAttempts=" + noOfAttempts +
+                ", marksSet=" + marksSet +
                 ", subjectForAssignment=" + subjectForAssignment +
+                ", EssayList=" + EssayList +
                 ", mcqList=" + mcqList +
+                ", fileDBList=" + fileDBList +
                 '}';
     }
 }

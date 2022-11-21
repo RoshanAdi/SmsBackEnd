@@ -1,13 +1,7 @@
 package com.se.smsbackend.Controller;
 
-import com.se.smsbackend.Entity.Assignment;
-import com.se.smsbackend.Entity.McqQuestion;
-import com.se.smsbackend.Entity.Subject;
-import com.se.smsbackend.Entity.Teacher;
-import com.se.smsbackend.Repository.AssignmentRepo;
-import com.se.smsbackend.Repository.McqRepo;
-import com.se.smsbackend.Repository.SubjectRepo;
-import com.se.smsbackend.Repository.TeacherRepo;
+import com.se.smsbackend.Entity.*;
+import com.se.smsbackend.Repository.*;
 import com.se.smsbackend.Service.TeacherService;
 import com.se.smsbackend.Service.TeacherServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +40,8 @@ public class TeacherController {
     AssignmentRepo assignmentRepo;
     @Autowired
     McqRepo mcqRepo;
+    @Autowired
+    EssayQuestionRepo essayQuestionRepo;
 
     @PostMapping(value = "/teacher/register")
     public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
@@ -160,6 +156,9 @@ public class TeacherController {
         existAssignment.setAssigmentTitle(assignment.getAssigmentTitle());
         existAssignment.setAssigmentDiscription(assignment.getAssigmentDiscription());
         existAssignment.setAssigmentData(assignment.getAssigmentData());
+        existAssignment.setEndTime(assignment.getEndTime());
+        existAssignment.setStartTime(assignment.getStartTime());
+        existAssignment.setNoOfAttempts(assignment.getNoOfAttempts());
         assignmentRepo.save(existAssignment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -211,5 +210,26 @@ public class TeacherController {
         System.out.println(teacher.getSubjects());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping(value = "/EssayQuestion/create/{AssiId}")
+    public String AddEssayQ(@RequestBody EssayQuestion essayQuestion, @PathVariable int AssiId) {
+        Assignment existAssi = assignmentRepo.findById(AssiId);
+        essayQuestion.setAssignmentEssayQ(existAssi);
+        essayQuestionRepo.save(essayQuestion);
+        return "saved";
 
+    }
+
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
+    @GetMapping("/EssayQuestions/{AssiId}")
+    public List<EssayQuestion> QuestionsList( @PathVariable int AssiId) {
+        Assignment assignment = assignmentRepo.findById(AssiId);
+        return essayQuestionRepo.findByAssignmentEssayQ(assignment);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @DeleteMapping("/EssayQuestions/delete/{id}")
+    public void deleteEssayQ(@PathVariable Integer id) {
+        essayQuestionRepo.deleteById(id);
+    }
 }

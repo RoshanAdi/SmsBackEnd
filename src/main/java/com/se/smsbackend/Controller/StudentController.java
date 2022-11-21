@@ -2,10 +2,7 @@
 package com.se.smsbackend.Controller;
 
 import com.se.smsbackend.Dto.StudentDto;
-import com.se.smsbackend.Entity.Assignment;
-import com.se.smsbackend.Entity.Marks;
-import com.se.smsbackend.Entity.Student;
-import com.se.smsbackend.Entity.Subject;
+import com.se.smsbackend.Entity.*;
 import com.se.smsbackend.Repository.*;
 import com.se.smsbackend.Security.AuthToken;
 import com.se.smsbackend.Security.LoginUser;
@@ -60,6 +57,8 @@ public class StudentController {
     MarksRepository marksRepository;
     @Autowired
     AssignmentRepo assignmentRepo;
+    @Autowired
+    EssayAsnwersRepo essayAsnwersRepo;
 
 
 
@@ -201,9 +200,19 @@ public class StudentController {
         System.out.println("marks found from the database = "+marks);
         return marks;
     }
-}
+
+    @PreAuthorize("hasRole('Student')")
+    @PostMapping("/EssayQuestions/answerSubmit/{assigmentID}/{username}")
+    public void saveEssayAnswers(@PathVariable String assigmentID, @PathVariable String username, @RequestBody String answerString) {
+       EssayAnswers essayAnswers = new EssayAnswers();
+       essayAnswers.setEssayAnswersList(answerString);
+       essayAnswers.setUsername(username);
+       essayAnswers.setAssigmentID(assigmentID);
+        System.out.println("pirnting essayanswer got = "+essayAnswers);
+        essayAsnwersRepo.save(essayAnswers);
+    }
 
 
-
+    }
 
 
