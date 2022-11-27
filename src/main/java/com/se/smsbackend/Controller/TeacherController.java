@@ -264,4 +264,19 @@ public class TeacherController {
 
            return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping("/marks/File/{TotalMarks}")
+    public ResponseEntity<?> saveFileMarks( @RequestBody Marks marks, @PathVariable String TotalMarks) {
+
+        Assignment assignment = assignmentRepo.findById(marks.getAssignmentId());
+        Student student = studentRepo.findByUsername(marks.getStudentUsername());
+        marks.setMarksupdateId(marks.getStudentUsername()+marks.getAssignmentId());
+        marks.setStudent(student);
+        marks.setAssignment(assignment);
+        String var = marks.getMarks();
+        String var2 = var+"/"+TotalMarks;
+        marks.setMarks(var2);
+        marksRepository.save(marks);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -37,6 +37,9 @@ public class Assignment {
     @OneToMany(mappedBy = "assignmentOfFile", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<FileDB> fileDBList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<StudentFileDB> studentFileDBList = new ArrayList<>();
+
 
     public Subject getSubjectForAssignment() {
         return subjectForAssignment;
@@ -134,7 +137,13 @@ public class Assignment {
         EssayList = essayList;
     }
 
+    public List<StudentFileDB> getStudentFileDBList() {
+        return studentFileDBList;
+    }
 
+    public void setStudentFileDBList(List<StudentFileDB> studentFileDBList) {
+        this.studentFileDBList = studentFileDBList;
+    }
 }
 
 

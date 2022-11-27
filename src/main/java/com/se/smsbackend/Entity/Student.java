@@ -48,6 +48,9 @@ public class Student {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Subject> subjects = new HashSet<>();
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<StudentFileDB> studentFileDBList = new ArrayList<>();
+
     public List<Attendance> getAttendanceList() {
         return AttendanceList;
     }
@@ -190,6 +193,14 @@ public class Student {
 
     public void setEssayAnswers(List<EssayAnswers> essayAnswers) {
         this.essayAnswers = essayAnswers;
+    }
+
+    public List<StudentFileDB> getStudentFileDBList() {
+        return studentFileDBList;
+    }
+
+    public void setStudentFileDBList(List<StudentFileDB> studentFileDBList) {
+        this.studentFileDBList = studentFileDBList;
     }
 
     @Override
