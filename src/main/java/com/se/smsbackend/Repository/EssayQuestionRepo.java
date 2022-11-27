@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface EssayQuestionRepo extends JpaRepository<EssayQuestion, Integer> {
 public List<EssayQuestion> findByAssignmentEssayQ(Assignment assignment);
+public EssayQuestion findById(int id);
 }

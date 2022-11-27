@@ -42,6 +42,12 @@ public class TeacherController {
     McqRepo mcqRepo;
     @Autowired
     EssayQuestionRepo essayQuestionRepo;
+    @Autowired
+    EssayAsnwersRepo essayAsnwersRepo;
+    @Autowired
+    StudentRepo studentRepo;
+    @Autowired
+    MarksRepository marksRepository;
 
     @PostMapping(value = "/teacher/register")
     public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
@@ -231,5 +237,31 @@ public class TeacherController {
     @DeleteMapping("/EssayQuestions/delete/{id}")
     public void deleteEssayQ(@PathVariable Integer id) {
         essayQuestionRepo.deleteById(id);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/EssayAnswers/{AssiId}")
+    public List<EssayAnswers> QuestionsAnswerList( @PathVariable String AssiId) {
+         return essayAsnwersRepo.findByAssigmentID(AssiId);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping("/marks/EssayQuestions/{TotalMarks}")
+    public ResponseEntity<?> saveMarks( @RequestBody Marks marks, @PathVariable String TotalMarks) {
+
+        Assignment assignment = assignmentRepo.findById(marks.getAssignmentId());
+        Student student = studentRepo.findByUsername(marks.getStudentUsername());
+        Marks exsistingMark = marksRepository.findByMarksupdateId(marks.getStudentUsername()+marks.getAssignmentId());
+        exsistingMark.setStudent(student);
+        exsistingMark.setAssignment(assignment);
+        exsistingMark.setAssignmentId(marks.getAssignmentId());
+        exsistingMark.setStudentUsername(student.getUsername());
+            String var = marks.getMarks();
+            String var2 = var+"/"+TotalMarks;
+            exsistingMark.setMarks(var2);
+            marksRepository.save(exsistingMark);
+            System.out.println("new marks received = " + marks.getMarks());
+
+           return new ResponseEntity<>(HttpStatus.OK);
     }
 }

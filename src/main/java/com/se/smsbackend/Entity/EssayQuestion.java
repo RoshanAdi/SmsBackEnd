@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class EssayQuestion {
@@ -19,6 +20,18 @@ public class EssayQuestion {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Assignment assignmentEssayQ;
+
+    @OneToMany(mappedBy = "question",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<EssayAnswers> essayAnswers;
+
+    public List<EssayAnswers> getEssayAnswers() {
+        return essayAnswers;
+    }
+
+    public void setEssayAnswers(List<EssayAnswers> essayAnswers) {
+        this.essayAnswers = essayAnswers;
+    }
 
     public int getId() {
         return id;

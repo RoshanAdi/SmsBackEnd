@@ -6,9 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Assignment {
@@ -22,9 +20,8 @@ public class Assignment {
     private String endTime;
     private int noOfAttempts;
 
-    @OneToMany(mappedBy = "assignment",cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<Marks> marksSet = new HashSet<>();
+    @OneToMany(mappedBy = "assignment",cascade = CascadeType.ALL ,orphanRemoval = true  ,fetch = FetchType.LAZY)
+    private List<Marks> marksSet = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "subject4assign", nullable = true)
@@ -121,11 +118,11 @@ public class Assignment {
         this.noOfAttempts = noOfAttempts;
     }
 
-    public Set<Marks> getMarksSet() {
+    public List<Marks> getMarksSet() {
         return marksSet;
     }
 
-    public void setMarksSet(Set<Marks> marksSet) {
+    public void setMarksSet(List<Marks> marksSet) {
         this.marksSet = marksSet;
     }
 
@@ -137,23 +134,7 @@ public class Assignment {
         EssayList = essayList;
     }
 
-    @Override
-    public String toString() {
-        return "Assignment{" +
-                "assigmentID=" + assigmentID +
-                ", assigmentTitle='" + assigmentTitle + '\'' +
-                ", assigmentDiscription='" + assigmentDiscription + '\'' +
-                ", assigmentData='" + assigmentData + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", noOfAttempts=" + noOfAttempts +
-                ", marksSet=" + marksSet +
-                ", subjectForAssignment=" + subjectForAssignment +
-                ", EssayList=" + EssayList +
-                ", mcqList=" + mcqList +
-                ", fileDBList=" + fileDBList +
-                '}';
-    }
+
 }
 
 

@@ -26,6 +26,7 @@ public class Marks {
     @ManyToOne
     @JoinColumn(name = "assigmentset", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Assignment assignment;
 
     public Assignment getAssignment() {
@@ -91,4 +92,8 @@ public class Marks {
     public void setAttempt(int attempt) {
         this.attempt = attempt;
     }
+
+
+
+
 }

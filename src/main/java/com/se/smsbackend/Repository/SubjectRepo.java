@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SubjectRepo extends JpaRepository <Subject, Integer> {
     public Subject findBySubjectName(String SubjectName);
     public  Subject findById(int id);
+
+
 }

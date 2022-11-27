@@ -1,5 +1,9 @@
 package com.se.smsbackend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,13 +12,32 @@ public class EssayAnswers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(columnDefinition = "TEXT", length = 4000)
-    @Lob
-    private String essayAnswersList;
+/*    @Column(columnDefinition = "TEXT", length = 4000)
+    @Lob*/
+
+
 private String assigmentID;
     private String username;
+    private String answer;
     private int marks;
     private String comments;
+    private String updateId;
+    @ManyToOne
+    @JoinColumn(name = "question", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    public EssayQuestion question;
+
+    @ManyToOne
+    @JoinColumn(name = "student", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    public Student student;
+    public EssayQuestion getQuestion() {
+        return question;
+    }
+
+
 
     public int getId() {
         return id;
@@ -24,7 +47,9 @@ private String assigmentID;
         this.id = id;
     }
 
-
+    public void setQuestion(EssayQuestion question) {
+        this.question = question;
+    }
 
     public String getAssigmentID() {
         return assigmentID;
@@ -58,11 +83,27 @@ private String assigmentID;
         this.comments = comments;
     }
 
-    public String getEssayAnswersList() {
-        return essayAnswersList;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setEssayAnswersList(String essayAnswersList) {
-        this.essayAnswersList = essayAnswersList;
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public String getUpdateId() {
+        return updateId;
+    }
+
+    public void setUpdateId(String updateId) {
+        this.updateId = updateId;
     }
 }

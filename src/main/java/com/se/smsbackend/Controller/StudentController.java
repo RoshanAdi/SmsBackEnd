@@ -7,9 +7,11 @@ import com.se.smsbackend.Repository.*;
 import com.se.smsbackend.Security.AuthToken;
 import com.se.smsbackend.Security.LoginUser;
 import com.se.smsbackend.Security.TokenProvider;
+import com.se.smsbackend.Service.SaveEssayAnswerService;
 import com.se.smsbackend.Service.StudentService;
 import com.se.smsbackend.Service.StudentService2;
 import com.se.smsbackend.Service.StudentServiceImpl;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -59,6 +61,8 @@ public class StudentController {
     AssignmentRepo assignmentRepo;
     @Autowired
     EssayAsnwersRepo essayAsnwersRepo;
+    @Autowired
+    SaveEssayAnswerService saveEssayAnswerService;
 
 
 
@@ -203,13 +207,18 @@ public class StudentController {
 
     @PreAuthorize("hasRole('Student')")
     @PostMapping("/EssayQuestions/answerSubmit/{assigmentID}/{username}")
-    public void saveEssayAnswers(@PathVariable String assigmentID, @PathVariable String username, @RequestBody String answerString) {
-       EssayAnswers essayAnswers = new EssayAnswers();
+    public void saveEssayAnswers(@PathVariable int assigmentID, @PathVariable String username, @RequestBody String essayAnswers) throws ParseException {
+    saveEssayAnswerService.save(assigmentID,username,essayAnswers);
+        System.out.println("Received username = "+username);
+        System.out.println("Received essayanswers = "+essayAnswers);
+
+
+   /*    EssayAnswers essayAnswers = new EssayAnswers();
        essayAnswers.setEssayAnswersList(answerString);
        essayAnswers.setUsername(username);
        essayAnswers.setAssigmentID(assigmentID);
         System.out.println("pirnting essayanswer got = "+essayAnswers);
-        essayAsnwersRepo.save(essayAnswers);
+        essayAsnwersRepo.save(essayAnswers);*/
     }
 
 

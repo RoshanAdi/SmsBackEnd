@@ -1,5 +1,6 @@
 package com.se.smsbackend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -40,6 +41,9 @@ public class Student {
 
     private boolean enabled;
 
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<EssayAnswers> essayAnswers;
     @ManyToMany (mappedBy = "students", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Subject> subjects = new HashSet<>();
@@ -180,11 +184,20 @@ public class Student {
         this.marks = marks;
     }
 
+    public List<EssayAnswers> getEssayAnswers() {
+        return essayAnswers;
+    }
+
+    public void setEssayAnswers(List<EssayAnswers> essayAnswers) {
+        this.essayAnswers = essayAnswers;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
                 "StudentId=" + StudentId +
                 ", AttendanceList=" + AttendanceList +
+                ", marks=" + marks +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", fullName='" + fullName + '\'' +
@@ -197,6 +210,7 @@ public class Student {
                 ", role='" + role + '\'' +
                 ", verificationCode='" + verificationCode + '\'' +
                 ", enabled=" + enabled +
+                ", essayAnswers=" + essayAnswers +
                 ", subjects=" + subjects +
                 '}';
     }
