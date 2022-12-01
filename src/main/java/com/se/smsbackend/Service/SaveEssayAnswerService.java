@@ -1,6 +1,5 @@
 package com.se.smsbackend.Service;
 
-import com.se.smsbackend.Entity.Assignment;
 import com.se.smsbackend.Entity.EssayAnswers;
 import com.se.smsbackend.Entity.Marks;
 import com.se.smsbackend.Repository.*;
@@ -29,19 +28,20 @@ public class SaveEssayAnswerService {
     MarksRepository marksRepository;
 
     public void save(int AssignmentId, String username, String answerString) throws ParseException, ArrayIndexOutOfBoundsException,NullPointerException {
-        Assignment assignment = assignmentRepo.findByAssigmentID(AssignmentId);
-        if (essayAsnwersRepo.findByUpdateId(username + AssignmentId) == null) {
-            if (marksRepository.findByMarksupdateId(username + AssignmentId)==null){
+
+/*        if (essayAsnwersRepo.findByUpdateId(username + AssignmentId) == null) {
+ *//*           if (marksRepository.findByMarksupdateId(username + AssignmentId)==null){*//*
             Marks marks = new Marks();
+            marks.setAssignmentId(AssignmentId);
             marks.setMarksupdateId(username + AssignmentId);
             marks.setAttempt(2);
-            marksRepository.save(marks);}
+            marksRepository.save(marks);*//*}
             else {
                 Marks marks = marksRepository.findByMarksupdateId(username + AssignmentId);
             int attempt = marks.getAttempt();
             marks.setAttempt(attempt+1);
             marksRepository.save(marks);
-            }
+            }*//*
             JSONObject obj2 = new JSONObject(answerString);
             Set<String> keys = obj2.keySet();
             List<String> stringsList = new ArrayList<>(keys);
@@ -61,9 +61,10 @@ public class SaveEssayAnswerService {
                 System.out.println("Value = " + essayAnswers);
             }
 
-        } else {
+        } else {*/
             if (marksRepository.findByMarksupdateId(username + AssignmentId)==null){
                 Marks marks = new Marks();
+                marks.setAssignmentId(AssignmentId);
                 marks.setMarksupdateId(username + AssignmentId);
                 marks.setAttempt(2);
                 marksRepository.save(marks);
@@ -98,4 +99,5 @@ public class SaveEssayAnswerService {
         }
 
     }
-}
+/*
+}*/
