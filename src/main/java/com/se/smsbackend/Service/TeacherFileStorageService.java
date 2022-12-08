@@ -1,9 +1,9 @@
 package com.se.smsbackend.Service;
 
 import com.se.smsbackend.Entity.Assignment;
-import com.se.smsbackend.Entity.FileDB;
+import com.se.smsbackend.Entity.TeacherFileDB;
 import com.se.smsbackend.Repository.AssignmentRepo;
-import com.se.smsbackend.Repository.FileDBRepository;
+import com.se.smsbackend.Repository.TeacherFileDBRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -15,27 +15,27 @@ import java.util.stream.Stream;
 
 @Service
 @Transactional
-public class FileStorageService {
+public class TeacherFileStorageService {
 
     @Autowired
-    private FileDBRepository fileDBRepository;
+    private TeacherFileDBRepository fileDBRepository;
     @Autowired
     AssignmentRepo assignmentRepo;
 
-    public FileDB store(MultipartFile file, int id) throws IOException {
+    public TeacherFileDB store(MultipartFile file, int id) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        FileDB fileDB = new FileDB(fileName, file.getContentType(), file.getBytes());
+        TeacherFileDB fileDB = new TeacherFileDB(fileName, file.getContentType(), file.getBytes());
         Assignment assignment = assignmentRepo.findById(id);
         System.out.println(id+"printing assignement for file save"+assignment);
 fileDB.setAssignmentOfFile(assignment);
         return fileDBRepository.save(fileDB);
     }
 
-    public FileDB getFile(String id) {
+    public TeacherFileDB getFile(String id) {
         return fileDBRepository.findById(id).get();
     }
 
-    public Stream<FileDB> getAllFiles() {
+    public Stream<TeacherFileDB> getAllFiles() {
         return fileDBRepository.findAll().stream();
     }
 

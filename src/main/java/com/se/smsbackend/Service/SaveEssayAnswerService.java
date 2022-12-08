@@ -1,7 +1,7 @@
 package com.se.smsbackend.Service;
 
 import com.se.smsbackend.Entity.EssayAnswers;
-import com.se.smsbackend.Entity.Marks;
+import com.se.smsbackend.Entity.AssignmentMarks;
 import com.se.smsbackend.Repository.*;
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONObject;
@@ -25,7 +25,7 @@ public class SaveEssayAnswerService {
     @Autowired
     StudentRepo studentRepo;
     @Autowired
-    MarksRepository marksRepository;
+    AssignmentsMarksRepository marksRepository;
 
     public void save(int AssignmentId, String username, String answerString) throws ParseException, ArrayIndexOutOfBoundsException,NullPointerException {
 
@@ -63,14 +63,15 @@ public class SaveEssayAnswerService {
 
         } else {*/
             if (marksRepository.findByMarksupdateId(username + AssignmentId)==null){
-                Marks marks = new Marks();
+                AssignmentMarks marks = new AssignmentMarks();
                 marks.setAssignmentId(AssignmentId);
                 marks.setMarksupdateId(username + AssignmentId);
                 marks.setAttempt(2);
+                marks.setAssignment(assignmentRepo.findByAssigmentID(AssignmentId));
                 marksRepository.save(marks);
             }
             else {
-                Marks marks = marksRepository.findByMarksupdateId(username + AssignmentId);
+                AssignmentMarks marks = marksRepository.findByMarksupdateId(username + AssignmentId);
                 marks.setAttempt(marks.getAttempt() + 1);
                 marksRepository.save(marks);
             }

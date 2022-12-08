@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
     @Table(name = "files")
-    public class FileDB {
+    public class TeacherFileDB {
         @Id
         @GeneratedValue(generator = "uuid")
         @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -28,10 +28,10 @@ import javax.persistence.*;
         @Lob
         private byte[] data;
 
-        public FileDB() {
+        public TeacherFileDB() {
         }
 
-        public FileDB(String name, String type, byte[] data) {
+        public TeacherFileDB(String name, String type, byte[] data) {
             this.name = name;
             this.type = type;
             this.data = data;

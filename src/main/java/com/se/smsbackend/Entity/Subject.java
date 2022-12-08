@@ -35,13 +35,14 @@ public class Subject implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Subject_Student",joinColumns = @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),inverseJoinColumns = @JoinColumn(name = "StudentId", referencedColumnName = "StudentId")    )
     @JsonIgnore
-    private Set<Student> students;
+    private List<Student> students = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "subjectForAssignment", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<Assignment> AssigmentList = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<SubjectMarks> subjectMarks = new ArrayList<>();
     public String getCreaterFirstName() {
         return createrFirstName;
     }
@@ -68,11 +69,11 @@ public class Subject implements Serializable {
         this.teachers = teachers;
     }
 
-    public Set<Student> getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 
-    public void setStudents(Set<Student> students) {
+    public void setStudents(List<Student> students) {
         this.students = students;
     }
 
@@ -114,5 +115,13 @@ public class Subject implements Serializable {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public List<SubjectMarks> getSubjectMarks() {
+        return subjectMarks;
+    }
+
+    public void setSubjectMarks(List<SubjectMarks> subjectMarks) {
+        this.subjectMarks = subjectMarks;
     }
 }

@@ -20,8 +20,8 @@ public class Assignment {
     private String endTime;
     private int noOfAttempts;
 
-    @OneToMany(mappedBy = "assignment",cascade = CascadeType.ALL ,orphanRemoval = true  ,fetch = FetchType.LAZY)
-    private List<Marks> marksSet = new ArrayList<>();
+    @OneToMany(mappedBy = "assignment",cascade = CascadeType.ALL ,orphanRemoval = true  ,fetch = FetchType.EAGER)
+    private List<AssignmentMarks> marksSet = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "subject4assign", nullable = true)
@@ -35,7 +35,7 @@ public class Assignment {
     private List<McqQuestion> mcqList = new ArrayList<>();
 
     @OneToMany(mappedBy = "assignmentOfFile", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
-    private List<FileDB> fileDBList = new ArrayList<>();
+    private List<TeacherFileDB> fileDBList = new ArrayList<>();
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<StudentFileDB> studentFileDBList = new ArrayList<>();
@@ -89,11 +89,11 @@ public class Assignment {
         this.mcqList = mcqList;
     }
 
-    public List<FileDB> getFileDBList() {
+    public List<TeacherFileDB> getFileDBList() {
         return fileDBList;
     }
 
-    public void setFileDBList(List<FileDB> fileDBList) {
+    public void setFileDBList(List<TeacherFileDB> fileDBList) {
         this.fileDBList = fileDBList;
     }
 
@@ -121,11 +121,11 @@ public class Assignment {
         this.noOfAttempts = noOfAttempts;
     }
 
-    public List<Marks> getMarksSet() {
+    public List<AssignmentMarks> getMarksSet() {
         return marksSet;
     }
 
-    public void setMarksSet(List<Marks> marksSet) {
+    public void setMarksSet(List<AssignmentMarks> marksSet) {
         this.marksSet = marksSet;
     }
 

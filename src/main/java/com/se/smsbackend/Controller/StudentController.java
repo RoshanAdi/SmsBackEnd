@@ -29,9 +29,7 @@ import javax.mail.MessagingException;
 import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static com.se.smsbackend.Site.Utility.getSiteURL;
 
@@ -56,7 +54,7 @@ public class StudentController {
     @Autowired
     SubjectRepo subjectRepo;
     @Autowired
-    MarksRepository marksRepository;
+    AssignmentsMarksRepository marksRepository;
     @Autowired
     AssignmentRepo assignmentRepo;
     @Autowired
@@ -152,7 +150,7 @@ public class StudentController {
         String currentStud = authentication.getName();
         Student student = studentRepo.findByUsername(currentStud);
         if (subject.getStudents()==null){
-            Set<Student> students = new HashSet<>();
+            List<Student> students = new ArrayList<>();
             students.add(student);
             subject.setStudents(students);
             subjectRepo.save(subject);}
@@ -176,7 +174,7 @@ public class StudentController {
     }
     @PreAuthorize("hasRole('Student')")
     @PutMapping("/marks/{assigmentID}/{username}")
-    public ResponseEntity<?> saveMarks( @PathVariable int assigmentID,@PathVariable String username,@RequestBody Marks marks) {
+    public ResponseEntity<?> saveMarks( @PathVariable int assigmentID,@PathVariable String username,@RequestBody AssignmentMarks marks) {
 
         Assignment assignment = assignmentRepo.findById(assigmentID);
         Student student = studentRepo.findByUsername(username);
@@ -190,7 +188,7 @@ public class StudentController {
             marksRepository.save(marks);
         }
         else {
-            Marks marksExsist = marksRepository.findByMarksupdateId(marks.getMarksupdateId());
+            AssignmentMarks marksExsist = marksRepository.findByMarksupdateId(marks.getMarksupdateId());
             marksExsist.setMarks(marks.getMarks());
             marksExsist.setAttempt(marksExsist.getAttempt()+1);
             marksRepository.save(marksExsist);
@@ -199,8 +197,8 @@ public class StudentController {
     }
     @PreAuthorize("hasRole('Student')")
     @GetMapping("/marks/{marksupdateId}")
-    public Marks getMarks(@PathVariable String marksupdateId) {
-        Marks marks = marksRepository.findByMarksupdateId(marksupdateId);
+    public AssignmentMarks getMarks(@PathVariable String marksupdateId) {
+        AssignmentMarks marks = marksRepository.findByMarksupdateId(marksupdateId);
         System.out.println("marks found from the database = "+marks);
         return marks;
     }

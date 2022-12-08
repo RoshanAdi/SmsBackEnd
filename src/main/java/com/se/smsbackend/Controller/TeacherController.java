@@ -2,8 +2,10 @@ package com.se.smsbackend.Controller;
 
 import com.se.smsbackend.Entity.*;
 import com.se.smsbackend.Repository.*;
+import com.se.smsbackend.Service.SubjectMarksService;
 import com.se.smsbackend.Service.TeacherService;
 import com.se.smsbackend.Service.TeacherServiceImpl;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -47,7 +49,9 @@ public class TeacherController {
     @Autowired
     StudentRepo studentRepo;
     @Autowired
-    MarksRepository marksRepository;
+    AssignmentsMarksRepository marksRepository;
+    @Autowired
+    SubjectMarksService studentMarksService;
 
     @PostMapping(value = "/teacher/register")
     public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
@@ -247,11 +251,11 @@ public class TeacherController {
 
     @PreAuthorize("hasRole('Teacher')")
     @PostMapping("/marks/EssayQuestions/{TotalMarks}")
-    public ResponseEntity<?> saveMarks( @RequestBody Marks marks, @PathVariable String TotalMarks) {
+    public ResponseEntity<?> saveMarks(@RequestBody AssignmentMarks marks, @PathVariable String TotalMarks) {
 
         Assignment assignment = assignmentRepo.findById(marks.getAssignmentId());
         Student student = studentRepo.findByUsername(marks.getStudentUsername());
-        Marks exsistingMark = marksRepository.findByMarksupdateId(marks.getStudentUsername()+marks.getAssignmentId());
+        AssignmentMarks exsistingMark = marksRepository.findByMarksupdateId(marks.getStudentUsername()+marks.getAssignmentId());
         exsistingMark.setStudent(student);
         exsistingMark.setAssignment(assignment);
         exsistingMark.setAssignmentId(marks.getAssignmentId());
@@ -266,17 +270,30 @@ public class TeacherController {
     }
     @PreAuthorize("hasRole('Teacher')")
     @PostMapping("/marks/File/{TotalMarks}")
-    public ResponseEntity<?> saveFileMarks( @RequestBody Marks marks, @PathVariable String TotalMarks) {
+    public ResponseEntity<?> saveFileMarks(@RequestBody AssignmentMarks marks1, @PathVariable String TotalMarks) {
 
-        Assignment assignment = assignmentRepo.findById(marks.getAssignmentId());
-        Student student = studentRepo.findByUsername(marks.getStudentUsername());
-        marks.setMarksupdateId(marks.getStudentUsername()+marks.getAssignmentId());
+        Assignment assignment = assignmentRepo.findById(marks1.getAssignmentId());
+        Student student = studentRepo.findByUsername(marks1.getStudentUsername());
+        AssignmentMarks marks = marksRepository.findByMarksupdateId(marks1.getStudentUsername()+marks1.getAssignmentId());
         marks.setStudent(student);
         marks.setAssignment(assignment);
-        String var = marks.getMarks();
+        String var = marks1.getMarks();
         String var2 = var+"/"+TotalMarks;
         marks.setMarks(var2);
         marksRepository.save(marks);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-}
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/Subject/SubjectMarks/{id}")
+    public List getSubjectForSubjectMarks(@PathVariable int id) {
+
+        return studentMarksService.getBySubjectId(id);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping("/Subject/MarksSubmit/{SubjectID}")
+    public void saveSubMarks(@PathVariable int SubjectID, @RequestBody String marksString) throws ParseException {
+        studentMarksService.save(SubjectID,marksString);
+
+    }
+    }

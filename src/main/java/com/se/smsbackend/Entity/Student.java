@@ -21,7 +21,10 @@ public class Student {
     private List<Attendance> AttendanceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
-    private Set<Marks> marks = new HashSet<>();
+    private Set<AssignmentMarks> marks = new HashSet<>();
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private Set<SubjectMarks> subjectMarks = new HashSet<>();
 
     private String firstName;
     private String lastName;
@@ -44,7 +47,8 @@ public class Student {
     @OneToMany(mappedBy = "student",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @JsonIgnore
     private List<EssayAnswers> essayAnswers;
-    @ManyToMany (mappedBy = "students", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+
+   @ManyToMany (mappedBy = "students", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Subject> subjects = new HashSet<>();
 
@@ -179,11 +183,11 @@ public class Student {
         this.role = role;
     }
 
-    public Set<Marks> getMarks() {
+    public Set<AssignmentMarks> getMarks() {
         return marks;
     }
 
-    public void setMarks(Set<Marks> marks) {
+    public void setMarks(Set<AssignmentMarks> marks) {
         this.marks = marks;
     }
 
@@ -203,27 +207,14 @@ public class Student {
         this.studentFileDBList = studentFileDBList;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "StudentId=" + StudentId +
-                ", AttendanceList=" + AttendanceList +
-                ", marks=" + marks +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", age='" + age + '\'' +
-                ", username='" + username + '\'' +
-                ", tp='" + tp + '\'' +
-                ", address='" + address + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                ", verificationCode='" + verificationCode + '\'' +
-                ", enabled=" + enabled +
-                ", essayAnswers=" + essayAnswers +
-                ", subjects=" + subjects +
-                '}';
+    public Set<SubjectMarks> getSubjectMarks() {
+        return subjectMarks;
     }
+
+    public void setSubjectMarks(Set<SubjectMarks> subjectMarks) {
+        this.subjectMarks = subjectMarks;
+    }
+
+
 }
 
