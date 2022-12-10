@@ -52,6 +52,10 @@ public class TeacherController {
     AssignmentsMarksRepository marksRepository;
     @Autowired
     SubjectMarksService studentMarksService;
+    @Autowired
+    ReportRepo reportRepo;
+    @Autowired
+    SubjectMarksRepo subjectMarksRepo;
 
     @PostMapping(value = "/teacher/register")
     public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
@@ -296,4 +300,17 @@ public class TeacherController {
         studentMarksService.save(SubjectID,marksString);
 
     }
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
+    @GetMapping("/Report")
+    public List<Report> getReport() {
+
+        return reportRepo.findAll();
+    }
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
+    @GetMapping("/subjectMarks/{subId}")
+    public List<SubjectMarks> getReport(@PathVariable String subId) {
+
+        return subjectMarksRepo.findBySubjectId(subId);
+    }
+
     }

@@ -1,5 +1,6 @@
 package com.se.smsbackend.Service;
 
+import com.se.smsbackend.Entity.Assignment;
 import com.se.smsbackend.Entity.EssayAnswers;
 import com.se.smsbackend.Entity.AssignmentMarks;
 import com.se.smsbackend.Repository.*;
@@ -28,7 +29,7 @@ public class SaveEssayAnswerService {
     AssignmentsMarksRepository marksRepository;
 
     public void save(int AssignmentId, String username, String answerString) throws ParseException, ArrayIndexOutOfBoundsException,NullPointerException {
-
+        Assignment assignment = assignmentRepo.findByAssigmentID(AssignmentId);
 /*        if (essayAsnwersRepo.findByUpdateId(username + AssignmentId) == null) {
  *//*           if (marksRepository.findByMarksupdateId(username + AssignmentId)==null){*//*
             Marks marks = new Marks();
@@ -65,6 +66,7 @@ public class SaveEssayAnswerService {
             if (marksRepository.findByMarksupdateId(username + AssignmentId)==null){
                 AssignmentMarks marks = new AssignmentMarks();
                 marks.setAssignmentId(AssignmentId);
+                marks.setAssignmentName(assignment.getAssigmentTitle());
                 marks.setMarksupdateId(username + AssignmentId);
                 marks.setAttempt(2);
                 marks.setAssignment(assignmentRepo.findByAssigmentID(AssignmentId));

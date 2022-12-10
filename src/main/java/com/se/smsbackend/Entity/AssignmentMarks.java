@@ -16,6 +16,7 @@ public class AssignmentMarks {
     private String studentUsername;
     private int assignmentId;
     private int attempt;
+    private String assignmentName;
 
     @ManyToOne
     @JoinColumn(name = "student_marks", nullable = true)
@@ -93,7 +94,11 @@ public class AssignmentMarks {
         this.attempt = attempt;
     }
 
+    public String getAssignmentName() {
+        return assignmentName;
+    }
 
-
-
+    public void setAssignmentName(String assignmentName) {
+        this.assignmentName = assignmentName;
+    }
 }
