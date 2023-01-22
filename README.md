@@ -27,13 +27,13 @@ Teacher creates essay-type questions
 
 Teacher uploads files 
 
-Student answer MCQ
+Student answers MCQ
 
-Student answer essay questions
+Student answers essay questions
 
-Teacher grade essay questions
+Teacher grades essay questions
 
-Student upload answers
+Student uploads answers
 
 No.of attempts limitations
 
