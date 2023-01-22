@@ -49,7 +49,7 @@ Teacher adds final marks for the enrolled list of students
 
 Rank and average calculation
 
-Chats for marks distribution
+Chart of marks distribution
 
 Front end - Angular
 Repository - https://github.com/RoshanAdi/SmsFrontend
