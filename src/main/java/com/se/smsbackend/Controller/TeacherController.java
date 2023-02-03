@@ -1,15 +1,11 @@
 package com.se.smsbackend.Controller;
 
-import com.se.smsbackend.Entity.Assignment;
-import com.se.smsbackend.Entity.McqQuestion;
-import com.se.smsbackend.Entity.Subject;
-import com.se.smsbackend.Entity.Teacher;
-import com.se.smsbackend.Repository.AssignmentRepo;
-import com.se.smsbackend.Repository.McqRepo;
-import com.se.smsbackend.Repository.SubjectRepo;
-import com.se.smsbackend.Repository.TeacherRepo;
+import com.se.smsbackend.Entity.*;
+import com.se.smsbackend.Repository.*;
+import com.se.smsbackend.Service.SubjectMarksService;
 import com.se.smsbackend.Service.TeacherService;
 import com.se.smsbackend.Service.TeacherServiceImpl;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -46,6 +42,20 @@ public class TeacherController {
     AssignmentRepo assignmentRepo;
     @Autowired
     McqRepo mcqRepo;
+    @Autowired
+    EssayQuestionRepo essayQuestionRepo;
+    @Autowired
+    EssayAsnwersRepo essayAsnwersRepo;
+    @Autowired
+    StudentRepo studentRepo;
+    @Autowired
+    AssignmentsMarksRepository marksRepository;
+    @Autowired
+    SubjectMarksService studentMarksService;
+    @Autowired
+    ReportRepo reportRepo;
+    @Autowired
+    SubjectMarksRepo subjectMarksRepo;
 
     @PostMapping(value = "/teacher/register")
     public String saveTeacher(@RequestBody Teacher teacher, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException, NonUniqueResultException {
@@ -123,13 +133,13 @@ public class TeacherController {
 
     }
 
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/Subject/List")
     public List<Subject> subList() {
         return subjectRepo.findAll();
     }
 
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/Subject/{id}")
     public Subject subject(@PathVariable int id) {
 
@@ -160,6 +170,9 @@ public class TeacherController {
         existAssignment.setAssigmentTitle(assignment.getAssigmentTitle());
         existAssignment.setAssigmentDiscription(assignment.getAssigmentDiscription());
         existAssignment.setAssigmentData(assignment.getAssigmentData());
+        existAssignment.setEndTime(assignment.getEndTime());
+        existAssignment.setStartTime(assignment.getStartTime());
+        existAssignment.setNoOfAttempts(assignment.getNoOfAttempts());
         assignmentRepo.save(existAssignment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -182,7 +195,7 @@ public class TeacherController {
          return "saved";
 
     }
-    @PreAuthorize("hasRole('Teacher')")
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
     @GetMapping("/Assignment/{id}")
     public Assignment Assigment4Mcq(@PathVariable int id) {
 
@@ -197,17 +210,6 @@ public class TeacherController {
     @PreAuthorize("hasRole('Teacher')")
     @PutMapping("/Teacher/Enroll/{subjectID}")
     public ResponseEntity<?> enrollTeacher( @PathVariable int subjectID) {
-  /*      Subject subject = subjectRepo.findById(subjectID);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentTeacher = authentication.getName();
-        Teacher teacher = teacherRepo.findByUsername(currentTeacher);
-        if (teacher.getSubjects()==null){
-        Set<Subject> subjects = new HashSet<>();
-            subjects.add(subject);
-            teacher.setSubjects(subjects);
-            teacherRepo.save(teacher);}
-        else { teacher.getSubjects().add(subject);
-            teacherRepo.save(teacher);}*/
         Subject subject = subjectRepo.findById(subjectID);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentTeacher = authentication.getName();
@@ -222,5 +224,93 @@ public class TeacherController {
         System.out.println(teacher.getSubjects());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping(value = "/EssayQuestion/create/{AssiId}")
+    public String AddEssayQ(@RequestBody EssayQuestion essayQuestion, @PathVariable int AssiId) {
+        Assignment existAssi = assignmentRepo.findById(AssiId);
+        essayQuestion.setAssignmentEssayQ(existAssi);
+        essayQuestionRepo.save(essayQuestion);
+        return "saved";
 
-}
+    }
+
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
+    @GetMapping("/EssayQuestions/{AssiId}")
+    public List<EssayQuestion> QuestionsList( @PathVariable int AssiId) {
+        Assignment assignment = assignmentRepo.findById(AssiId);
+        return essayQuestionRepo.findByAssignmentEssayQ(assignment);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @DeleteMapping("/EssayQuestions/delete/{id}")
+    public void deleteEssayQ(@PathVariable Integer id) {
+        essayQuestionRepo.deleteById(id);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/EssayAnswers/{AssiId}")
+    public List<EssayAnswers> QuestionsAnswerList( @PathVariable String AssiId) {
+         return essayAsnwersRepo.findByAssigmentID(AssiId);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping("/marks/EssayQuestions/{TotalMarks}")
+    public ResponseEntity<?> saveMarks(@RequestBody AssignmentMarks marks, @PathVariable String TotalMarks) {
+
+        Assignment assignment = assignmentRepo.findById(marks.getAssignmentId());
+        Student student = studentRepo.findByUsername(marks.getStudentUsername());
+        AssignmentMarks exsistingMark = marksRepository.findByMarksupdateId(marks.getStudentUsername()+marks.getAssignmentId());
+        exsistingMark.setStudent(student);
+        exsistingMark.setAssignment(assignment);
+        exsistingMark.setAssignmentId(marks.getAssignmentId());
+        exsistingMark.setStudentUsername(student.getUsername());
+            String var = marks.getMarks();
+            String var2 = var+"/"+TotalMarks;
+            exsistingMark.setMarks(var2);
+            marksRepository.save(exsistingMark);
+            System.out.println("new marks received = " + marks.getMarks());
+
+           return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping("/marks/File/{TotalMarks}")
+    public ResponseEntity<?> saveFileMarks(@RequestBody AssignmentMarks marks1, @PathVariable String TotalMarks) {
+
+        Assignment assignment = assignmentRepo.findById(marks1.getAssignmentId());
+        Student student = studentRepo.findByUsername(marks1.getStudentUsername());
+        AssignmentMarks marks = marksRepository.findByMarksupdateId(marks1.getStudentUsername()+marks1.getAssignmentId());
+        marks.setStudent(student);
+        marks.setAssignment(assignment);
+        String var = marks1.getMarks();
+        String var2 = var+"/"+TotalMarks;
+        marks.setMarks(var2);
+        marksRepository.save(marks);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('Teacher')")
+    @GetMapping("/Subject/SubjectMarks/{id}")
+    public List getSubjectForSubjectMarks(@PathVariable int id) {
+
+        return studentMarksService.getBySubjectId(id);
+    }
+
+    @PreAuthorize("hasRole('Teacher')")
+    @PostMapping("/Subject/MarksSubmit/{SubjectID}")
+    public void saveSubMarks(@PathVariable int SubjectID, @RequestBody String marksString) throws ParseException {
+        studentMarksService.save(SubjectID,marksString);
+
+    }
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
+    @GetMapping("/Report")
+    public List<Report> getReport() {
+
+        return reportRepo.findAll();
+    }
+    @PreAuthorize("hasAnyRole('Teacher','Student')")
+    @GetMapping("/subjectMarks/{subId}")
+    public List<SubjectMarks> getReport(@PathVariable String subId) {
+
+        return subjectMarksRepo.findBySubjectId(subId);
+    }
+
+    }

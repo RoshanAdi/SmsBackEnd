@@ -15,7 +15,13 @@ public class Assignment {
     private int assigmentID;
     private String assigmentTitle;
     private String assigmentDiscription;
-    private String assigmentData;      // change the type
+    private String assigmentData;
+    private String startTime;
+    private String endTime;
+    private int noOfAttempts;
+
+    @OneToMany(mappedBy = "assignment",cascade = CascadeType.ALL ,orphanRemoval = true  ,fetch = FetchType.EAGER)
+    private List<AssignmentMarks> marksSet = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "subject4assign", nullable = true)
@@ -23,11 +29,16 @@ public class Assignment {
     @JsonIgnore
     private Subject subjectForAssignment;
 
+    @OneToMany(mappedBy = "assignmentEssayQ", cascade = CascadeType.ALL ,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<EssayQuestion> EssayList = new ArrayList<>();
     @OneToMany(mappedBy = "assignmentQuestions", cascade = CascadeType.ALL ,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<McqQuestion> mcqList = new ArrayList<>();
 
     @OneToMany(mappedBy = "assignmentOfFile", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
-    private List<FileDB> fileDBList = new ArrayList<>();
+    private List<TeacherFileDB> fileDBList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<StudentFileDB> studentFileDBList = new ArrayList<>();
 
 
     public Subject getSubjectForAssignment() {
@@ -78,24 +89,60 @@ public class Assignment {
         this.mcqList = mcqList;
     }
 
-    public List<FileDB> getFileDBList() {
+    public List<TeacherFileDB> getFileDBList() {
         return fileDBList;
     }
 
-    public void setFileDBList(List<FileDB> fileDBList) {
+    public void setFileDBList(List<TeacherFileDB> fileDBList) {
         this.fileDBList = fileDBList;
     }
 
-    @Override
-    public String toString() {
-        return "Assignment{" +
-                "assigmentID=" + assigmentID +
-                ", assigmentTitle='" + assigmentTitle + '\'' +
-                ", assigmentDiscription='" + assigmentDiscription + '\'' +
-                ", assigmentData='" + assigmentData + '\'' +
-                ", subjectForAssignment=" + subjectForAssignment +
-                ", mcqList=" + mcqList +
-                '}';
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getNoOfAttempts() {
+        return noOfAttempts;
+    }
+
+    public void setNoOfAttempts(int noOfAttempts) {
+        this.noOfAttempts = noOfAttempts;
+    }
+
+    public List<AssignmentMarks> getMarksSet() {
+        return marksSet;
+    }
+
+    public void setMarksSet(List<AssignmentMarks> marksSet) {
+        this.marksSet = marksSet;
+    }
+
+    public List<EssayQuestion> getEssayList() {
+        return EssayList;
+    }
+
+    public void setEssayList(List<EssayQuestion> essayList) {
+        EssayList = essayList;
+    }
+
+    public List<StudentFileDB> getStudentFileDBList() {
+        return studentFileDBList;
+    }
+
+    public void setStudentFileDBList(List<StudentFileDB> studentFileDBList) {
+        this.studentFileDBList = studentFileDBList;
     }
 }
 

@@ -1,15 +1,10 @@
 package com.se.smsbackend.Service;
 
-import com.se.smsbackend.Entity.Student;
-import com.se.smsbackend.Repository.StudentRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 @Component
 public class StudentService {
 
+/*
 @Autowired
 private JavaMailSender mailSender;
     @Autowired
@@ -28,6 +23,7 @@ private JavaMailSender mailSender;
     public Student getByUserName(String name)
     {return studentRepo.findByUsername(name);}
 
+*/
 
 
 }

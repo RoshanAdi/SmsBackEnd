@@ -1,20 +1,30 @@
 package com.se.smsbackend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Entity
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int StudentId;
-    @ManyToMany(mappedBy="StudentList")
-    private List<Subject> subjectList = new ArrayList<Subject>();
+
 
     @OneToMany(mappedBy = "studentForAttendance")
     private List<Attendance> AttendanceList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private Set<AssignmentMarks> marks = new HashSet<>();
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private Set<SubjectMarks> subjectMarks = new HashSet<>();
 
     private String firstName;
     private String lastName;
@@ -34,7 +44,16 @@ public class Student {
 
     private boolean enabled;
 
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<EssayAnswers> essayAnswers;
 
+   @ManyToMany (mappedBy = "students", cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Subject> subjects = new HashSet<>();
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<StudentFileDB> studentFileDBList = new ArrayList<>();
 
     public List<Attendance> getAttendanceList() {
         return AttendanceList;
@@ -44,12 +63,12 @@ public class Student {
         AttendanceList = attendanceList;
     }
 
-    public List<Subject> getSubjectList() {
-        return subjectList;
+    public Set<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setSubjectList(List<Subject> subjectList) {
-        this.subjectList = subjectList;
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
     }
 
     public int getStudentId() {
@@ -164,25 +183,38 @@ public class Student {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "StudentId=" + StudentId +
-                ", subjectList=" + subjectList +
-                ", AttendanceList=" + AttendanceList +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", age='" + age + '\'' +
-                ", username='" + username + '\'' +
-                ", tp='" + tp + '\'' +
-                ", address='" + address + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                ", verificationCode='" + verificationCode + '\'' +
-                ", enabled=" + enabled +
-                '}';
+    public Set<AssignmentMarks> getMarks() {
+        return marks;
     }
+
+    public void setMarks(Set<AssignmentMarks> marks) {
+        this.marks = marks;
+    }
+
+    public List<EssayAnswers> getEssayAnswers() {
+        return essayAnswers;
+    }
+
+    public void setEssayAnswers(List<EssayAnswers> essayAnswers) {
+        this.essayAnswers = essayAnswers;
+    }
+
+    public List<StudentFileDB> getStudentFileDBList() {
+        return studentFileDBList;
+    }
+
+    public void setStudentFileDBList(List<StudentFileDB> studentFileDBList) {
+        this.studentFileDBList = studentFileDBList;
+    }
+
+    public Set<SubjectMarks> getSubjectMarks() {
+        return subjectMarks;
+    }
+
+    public void setSubjectMarks(Set<SubjectMarks> subjectMarks) {
+        this.subjectMarks = subjectMarks;
+    }
+
+
 }
 

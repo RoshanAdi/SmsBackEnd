@@ -26,20 +26,23 @@ public class Subject implements Serializable {
     private String createdBy;
     private String createrFirstName;
 
-    @ManyToMany
-    private List<Student> StudentList = new ArrayList<>();
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Subject_Teacher",joinColumns = @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),inverseJoinColumns = @JoinColumn(name = "TeacherId", referencedColumnName = "TeacherId")    )
     @JsonIgnore
     private Set<Teacher> teachers;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Subject_Student",joinColumns = @JoinColumn(name = "subjectId", referencedColumnName = "subjectId"),inverseJoinColumns = @JoinColumn(name = "StudentId", referencedColumnName = "StudentId")    )
+    @JsonIgnore
+    private List<Student> students = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "subjectForAssignment", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
     private List<Assignment> AssigmentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "subjectForMark")
-    private List<Marks> MarksList = new ArrayList<>();
-
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL,orphanRemoval = true , fetch = FetchType.LAZY)
+    private List<SubjectMarks> subjectMarks = new ArrayList<>();
     public String getCreaterFirstName() {
         return createrFirstName;
     }
@@ -48,13 +51,7 @@ public class Subject implements Serializable {
         this.createrFirstName = createrFirstName;
     }
 
-    public List<Marks> getMarksList() {
-        return MarksList;
-    }
 
-    public void setMarksList(List<Marks> marksList) {
-        MarksList = marksList;
-    }
 
     public List<Assignment> getAssigmentList() {
         return AssigmentList;
@@ -72,12 +69,12 @@ public class Subject implements Serializable {
         this.teachers = teachers;
     }
 
-    public List<Student> getStudentList() {
-        return StudentList;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public void setStudentList(List<Student> studentList) {
-        StudentList = studentList;
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     public int getSubjectId() {
@@ -118,5 +115,13 @@ public class Subject implements Serializable {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public List<SubjectMarks> getSubjectMarks() {
+        return subjectMarks;
+    }
+
+    public void setSubjectMarks(List<SubjectMarks> subjectMarks) {
+        this.subjectMarks = subjectMarks;
     }
 }

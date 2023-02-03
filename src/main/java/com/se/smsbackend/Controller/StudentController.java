@@ -1,17 +1,17 @@
 
 package com.se.smsbackend.Controller;
 
-import com.se.smsbackend.Dto.StudentDetailProjection;
 import com.se.smsbackend.Dto.StudentDto;
-import com.se.smsbackend.Entity.Student;
-import com.se.smsbackend.Repository.StudentDetailsRepo;
-import com.se.smsbackend.Repository.StudentRepo;
+import com.se.smsbackend.Entity.*;
+import com.se.smsbackend.Repository.*;
 import com.se.smsbackend.Security.AuthToken;
 import com.se.smsbackend.Security.LoginUser;
 import com.se.smsbackend.Security.TokenProvider;
+import com.se.smsbackend.Service.SaveEssayAnswerService;
 import com.se.smsbackend.Service.StudentService;
 import com.se.smsbackend.Service.StudentService2;
 import com.se.smsbackend.Service.StudentServiceImpl;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -29,8 +29,7 @@ import javax.mail.MessagingException;
 import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static com.se.smsbackend.Site.Utility.getSiteURL;
 
@@ -39,8 +38,7 @@ import static com.se.smsbackend.Site.Utility.getSiteURL;
 public class StudentController {
     @Autowired
     StudentService studentService;
-    @Autowired
-    StudentDetailsRepo studentDetailsRepo;
+
     @Autowired
     StudentRepo studentRepo;
     @Autowired
@@ -53,6 +51,16 @@ public class StudentController {
     private TokenProvider jwtTokenUtil;
     @Autowired
     StudentService2 studentService2;
+    @Autowired
+    SubjectRepo subjectRepo;
+    @Autowired
+    AssignmentsMarksRepository marksRepository;
+    @Autowired
+    AssignmentRepo assignmentRepo;
+    @Autowired
+    EssayAsnwersRepo essayAsnwersRepo;
+    @Autowired
+    SaveEssayAnswerService saveEssayAnswerService;
 
 
 
@@ -69,19 +77,16 @@ public class StudentController {
     }
 
 
-    @PreAuthorize("hasRole('Student')")
-    @GetMapping("/student")
-    public List<Student> studList(){
-        return studentService.listAllStudents();
-    }
+
     @PreAuthorize("hasRole('Student')")
     @GetMapping("/Student/{name}")
-    public StudentDetailProjection get(@PathVariable String name) {
-        try {
-            return studentDetailsRepo.findByUsername(name);
-        } catch (NoSuchElementException e) {
-            return null;
-        }
+    public Student gettt(@PathVariable String name) {
+        Student exsiStudent = studentRepo.findByUsername(name);
+        exsiStudent.setPassword(null);
+        exsiStudent.setVerificationCode(null);
+
+        System.out.println("sending requested student = "+exsiStudent);
+        return exsiStudent;
     }
     @PreAuthorize("hasRole('Student')")
    @PutMapping("/Student/{Username}")
@@ -136,19 +141,85 @@ public class StudentController {
 
 
 
-   @PreAuthorize("hasRole('Student')")
-    @GetMapping(value="/students")
-    public String adminPing(){
-        return "Only Admins Can Read This";
+
+    @PreAuthorize("hasRole('Student')")
+    @PutMapping("/Student/Enroll/{subjectID}")
+    public ResponseEntity<?> enrollStud( @PathVariable int subjectID) {
+        Subject subject = subjectRepo.findById(subjectID);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentStud = authentication.getName();
+        Student student = studentRepo.findByUsername(currentStud);
+        if (subject.getStudents()==null){
+            List<Student> students = new ArrayList<>();
+            students.add(student);
+            subject.setStudents(students);
+            subjectRepo.save(subject);}
+        else { subject.getStudents().add(student);
+            subjectRepo.save(subject);}
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('Student')")
+    @GetMapping("/Student/Subjects/{name}")
+    public Student getStudSubjects(@PathVariable String name) {
+        try {
+            Student student = studentRepo.findByUsername(name);
+            Student student1 = new Student();
+            student1.setSubjects(student.getSubjects());
+
+            return student1;
+        } catch (NoSuchElementException | NullPointerException e) {
+            return null;
+        }
+    }
+    @PreAuthorize("hasRole('Student')")
+    @PutMapping("/marks/{assigmentID}/{username}")
+    public ResponseEntity<?> saveMarks( @PathVariable int assigmentID,@PathVariable String username,@RequestBody AssignmentMarks marks) {
+
+        Assignment assignment = assignmentRepo.findById(assigmentID);
+        Student student = studentRepo.findByUsername(username);
+        System.out.println("new marks received = " + marks);
+        if(marksRepository.findByMarksupdateId(marks.getMarksupdateId())==null) {
+            marks.setStudent(student);
+            marks.setAssignment(assignment);
+            marks.setAssignmentId(assigmentID);
+            marks.setStudentUsername(student.getUsername());
+            marks.setAttempt(1);
+            marksRepository.save(marks);
+        }
+        else {
+            AssignmentMarks marksExsist = marksRepository.findByMarksupdateId(marks.getMarksupdateId());
+            marksExsist.setMarks(marks.getMarks());
+            marksExsist.setAttempt(marksExsist.getAttempt()+1);
+            marksRepository.save(marksExsist);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('Student')")
+    @GetMapping("/marks/{marksupdateId}")
+    public AssignmentMarks getMarks(@PathVariable String marksupdateId) {
+        AssignmentMarks marks = marksRepository.findByMarksupdateId(marksupdateId);
+        System.out.println("marks found from the database = "+marks);
+        return marks;
+    }
+
+    @PreAuthorize("hasRole('Student')")
+    @PostMapping("/EssayQuestions/answerSubmit/{assigmentID}/{username}")
+    public void saveEssayAnswers(@PathVariable int assigmentID, @PathVariable String username, @RequestBody String essayAnswers) throws ParseException {
+    saveEssayAnswerService.save(assigmentID,username,essayAnswers);
+        System.out.println("Received username = "+username);
+        System.out.println("Received essayanswers = "+essayAnswers);
+
+
+   /*    EssayAnswers essayAnswers = new EssayAnswers();
+       essayAnswers.setEssayAnswersList(answerString);
+       essayAnswers.setUsername(username);
+       essayAnswers.setAssigmentID(assigmentID);
+        System.out.println("pirnting essayanswer got = "+essayAnswers);
+        essayAsnwersRepo.save(essayAnswers);*/
     }
 
 
-
-
-
-}
-
-
-
+    }
 
 
