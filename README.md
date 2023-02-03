@@ -29,7 +29,7 @@ Teacher uploads files
 
 Student answers MCQ
 
-Student answers essay questions
+Student answers essay questions.
 
 Teacher grades essay questions
 
