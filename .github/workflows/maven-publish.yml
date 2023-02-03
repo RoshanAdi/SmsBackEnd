@@ -29,8 +29,7 @@ jobs:
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      run: |
-          mysql --host 127.0.0.1 --port 33306 -uroot -proot1234 -e "SHOW DATABASES LIKE 'smsdb';" 2>/dev/null
+      run: mysql --host 127.0.0.1 --port 33306 -uroot -proot1234 -e "SHOW DATABASES LIKE 'smsdb';" 
 
 
 
