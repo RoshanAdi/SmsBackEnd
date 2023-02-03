@@ -106,6 +106,7 @@
 			<groupId>io.xiandan</groupId>
 			<artifactId>gson-ktx</artifactId>
 			<version>1.0.2</version>
+			<type>aar</type>
 		</dependency>
 
 
