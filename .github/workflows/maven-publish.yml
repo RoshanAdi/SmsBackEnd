@@ -29,10 +29,13 @@ jobs:
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      run: |
+          mysql --host 127.0.0.1 --port 33306 -uroot -proot1234 -e "SHOW DATABASES LIKE 'smsdb';" 2>/dev/null
+
 
 
     steps:
-    
+
     - uses: actions/checkout@v3
     - name: Set up JDK 19.0.1
       uses: actions/setup-java@v3
@@ -42,7 +45,7 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
         
-        
+      
 
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots package
