@@ -8,7 +8,13 @@ on:
     branches : [ master ]
   pull_request : 
     branches : [ master ]
-      
+
+env:
+  # Set environment variables
+  GIT_SHA: ${{ github.sha }}
+  GITHUB_REPOSITORY: ${{ github.repository }}
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: smsdb
     
 
 jobs:
@@ -24,12 +30,12 @@ jobs:
 
     steps:
 
-    - uses: mirromutth/mysql-action@v1.1
+    - name: Set up MySQL
+      uses: mysql/mysql-server-action@v1
       with:
-        mysql version: '8.0' 
-        mysql database: 'smsdb' 
-        mysql root password: root1234
-
+        mysql-version: 8.0
+        mysql-root-password: ${{ env.MYSQL_ROOT_PASSWORD }}
+        mysql-database: ${{ env.MYSQL_DATABASE }}
 
     - uses: actions/checkout@v3
     - name: Set up JDK 19.0.1
@@ -42,12 +48,12 @@ jobs:
         
       
 
-    #- name: Build with Maven
-      #run: mvn --batch-mode --update-snapshots package
+    - name: Build with Maven
+      run: mvn --batch-mode --update-snapshots package
 
-    #- name: Publish to GitHub Packages Apache Maven
-      #run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-      #env:
-        #GITHUB_TOKEN: ${{ github.token }}
+    - name: Publish to GitHub Packages Apache Maven
+      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
 
 
