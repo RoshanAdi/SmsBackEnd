@@ -31,7 +31,7 @@ jobs:
     steps:
 
     - name: Set up MySQL
-      uses: mysql/mysql-server-action@v1
+    - uses: mirromutth/mysql-action@v1.1
       with:
         mysql-version: 8.0
         mysql-root-password: ${{ env.MYSQL_ROOT_PASSWORD }}
