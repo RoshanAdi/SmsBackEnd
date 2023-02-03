@@ -58,7 +58,7 @@ jobs:
         Docker_Username: RoshanAdi
         Docker_Password: Rr0713641363@
       run: |
-        docker login -u RoshanAdi -p Rr0713641363@-stdin
+        docker login -u RoshanAdi -p Rr0713641363@
         
 
 
