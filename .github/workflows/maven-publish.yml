@@ -66,6 +66,6 @@ jobs:
       with:
           context: .
           push: true
-          tags: roshanadi/smsbackend:%d
+          tags: roshanadi/smsbackend:%dT
 
 
