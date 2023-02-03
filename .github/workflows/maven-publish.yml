@@ -14,10 +14,8 @@ on:
 jobs:
   build:
 
-    runs-on: ${{matrix.os}}
-    strategy: 
-      matrix:
-        os: [ macOS-11 ]
+    runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: write
