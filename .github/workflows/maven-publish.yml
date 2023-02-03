@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{matrix.os}}
     strategy: 
       matrix:
-        os: [ windows-10]
+        os: [ macOS-11 ]
     permissions:
       contents: read
       packages: write
