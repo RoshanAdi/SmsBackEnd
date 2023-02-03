@@ -29,7 +29,7 @@ jobs:
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      run: mysql -h 127.0.0.1 --port 33306 -uroot -proot1234 smsdb < request_data.sql
+      run: mysql -h 127.0.0.1  -uroot -proot1234 smsdb < request_data.sql
 
 
 
