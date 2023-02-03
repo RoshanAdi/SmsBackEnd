@@ -45,7 +45,8 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
         
-
+    - name: set env
+      run: echo "::set-env name=NOW::$(date +'%Y-%m-%dT%H:%M:%S')"
 
     - name: Build with Maven
       run: mvn --batch-mode --update-snapshots package
@@ -67,6 +68,6 @@ jobs:
       with:
           context: .
           push: true
-          tags: roshanadi/smsbackend:latest
+          tags: roshanadi/smsbackend:${{ env.NOW }}
 
 
