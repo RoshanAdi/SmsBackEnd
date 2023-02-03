@@ -20,20 +20,17 @@ jobs:
       contents: read
       packages: write
 
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: root1234
-          MYSQL_DATABASE: smsdb
-        ports:
-          - 33306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      run: mysql -h 127.0.0.1  -uroot -proot1234 smsdb < request_data.sql
-
 
 
     steps:
+
+    - uses: mirromutth/mysql-action@v1.1
+      with:
+        character set server: 'utf8' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
+        mysql version: '8.0' 
+        mysql database: 'smsdb' 
+        mysql root password: root1234
+
 
     - uses: actions/checkout@v3
     - name: Set up JDK 19.0.1
