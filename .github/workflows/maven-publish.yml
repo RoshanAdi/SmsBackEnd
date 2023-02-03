@@ -54,11 +54,11 @@ jobs:
     - uses: actions/checkout@v2
     - name: doker login
       env:
-        Docker_Username: ${{secrets.DOCKER_USERNAME}}
-        Docker_Password: ${{secrets.DOCKER_PASSWORD}}
+
+        Docker_Username: RoshanAdi
+        Docker_Password: Rr0713641363@
       run: |
-        docker login -u $Docker_Username -p $Docker_Password-stdin
+        docker login -u RoshanAdi -p Rr0713641363@-stdin
         
-   
 
 
